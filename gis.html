@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GIS · Daniel Manyasa</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, system-ui, sans-serif; }
+    body { background: #f4f6f9; display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 280px; background-color: #1e2b3a; color: #e6edf5; display: flex; flex-direction: column;
+      padding: 2rem 1.2rem; position: sticky; top: 0; height: 100vh; overflow-y: auto;
+      box-shadow: 2px 0 12px rgba(0,0,0,0.08); flex-shrink: 0; border-right: 1px solid #2c3e50;
+    }
+    .sidebar-brand { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2.2rem; padding-bottom: 1.2rem; border-bottom: 1px solid #3a4c5e; }
+    .sidebar-brand i { font-size: 2.2rem; color: #75b8e0; }
+    .sidebar-brand h1 { font-size: 1.45rem; font-weight: 500; letter-spacing: 0.3px; line-height: 1.2; }
+    .sidebar-brand h1 small { display: block; font-size: 0.8rem; font-weight: 300; color: #a3b8cc; margin-top: 0.1rem; }
+    .nav-section { margin-top: 1.2rem; }
+    .nav-section p { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: #7a93ab; margin-bottom: 0.6rem; }
+    .nav-item {
+      display: flex; align-items: center; gap: 0.8rem; padding: 0.6rem 0.8rem; border-radius: 8px;
+      color: #cddcec; transition: all 0.1s ease; cursor: pointer; font-size: 0.9rem; text-decoration: none;
+    }
+    .nav-item i { width: 1.3rem; color: #6f93b0; }
+    .nav-item.active, .nav-item:hover { background-color: #2f4053; color: white; font-weight: 500; }
+    .nav-item.active i, .nav-item:hover i { color: #83c5f0; }
+    .sidebar-footer { margin-top: auto; padding-top: 1.8rem; font-size: 0.75rem; color: #7a93ab; border-top: 1px solid #2f4053; }
+    .sidebar-footer .social-icons { display: flex; gap: 1.2rem; font-size: 1.1rem; }
+    .sidebar-footer .social-icons a { color: #8ba6c0; transition: 0.2s; }
+    .sidebar-footer .social-icons a:hover { color: #b6d4f0; }
+    .main-content { flex: 1; padding: 2rem 2.5rem; background: #f4f6f9; overflow-y: auto; }
+    .header-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+    .header-row h2 { font-weight: 400; color: #1e2b3a; font-size: 1.8rem; }
+    .header-row h2 i { color: #2f6f9f; margin-right: 10px; }
+    .card { background: white; border-radius: 16px; padding: 1.4rem 1.6rem 1.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.02); border: 1px solid #e2eaf2; margin-bottom: 1.8rem; }
+    .card-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eef3f8; padding-bottom: 0.8rem; margin-bottom: 1.2rem; }
+    .card-header h3 { font-weight: 500; font-size: 1.2rem; color: #1b344a; }
+    .card-header i { color: #3b6f96; font-size: 1.2rem; }
+    .gis-item { border-bottom: 1px solid #f0f5fa; padding: 1rem 0; }
+    .gis-item:last-child { border-bottom: 0; }
+    .gis-title { font-size: 1.05rem; font-weight: 600; color: #142b40; }
+    .gis-title i { color: #3a7aa0; width: 1.8rem; }
+    .gis-desc { font-size: 0.92rem; color: #2a435d; margin: 0.3rem 0 0.5rem 1.8rem; }
+    .tag { background: #e7eef7; font-size: 0.65rem; padding: 0.15rem 0.7rem; border-radius: 40px; color: #1b4a6b; letter-spacing: 0.3px; font-weight: 500; display: inline-block; margin: 0.2rem; }
+    .skill-badge { background: #eaf1f9; padding: 0.2rem 1rem; border-radius: 40px; font-size: 0.75rem; color: #1f4460; border: 1px solid #d1e0eb; display: inline-block; margin: 0.2rem; }
+    .btn-outline-shiny { background: transparent; border: 1px solid #b8cfdf; padding: 0.2rem 1rem; border-radius: 50px; font-size: 0.75rem; color: #1a4b6e; cursor: pointer; transition: 0.1s; text-decoration: none; display: inline-block; }
+    .btn-outline-shiny i { margin-right: 4px; }
+    .btn-outline-shiny:hover { background: #e7eef7; border-color: #8baec9; }
+    @media (max-width: 720px) { .sidebar { width: 220px; padding: 1.2rem 0.8rem; } .main-content { padding: 1.2rem; } }
+    @media (max-width: 550px) { body { flex-direction: column; } .sidebar { width: 100%; height: auto; position: relative; flex-direction: row; flex-wrap: wrap; padding: 1rem; gap: 0.5rem; border-right: none; border-bottom: 1px solid #2c3e50; } .sidebar-brand { margin-bottom: 0.2rem; border-bottom: none; padding-bottom: 0; flex: 1 1 100%; } .nav-section { display: flex; flex-wrap: wrap; gap: 0.2rem 0.5rem; margin-top: 0.2rem; } .nav-item { padding: 0.3rem 0.6rem; font-size: 0.8rem; } .sidebar-footer { display: none; } }
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <i class="fas fa-globe-africa"></i>
+      <h1>Daniel Manyasa <small>Geomatic Eng · GIS</small></h1>
+    </div>
+    <div class="nav-section">
+      <p>Navigation</p>
+      <a href="index.html" class="nav-item"><i class="fas fa-chart-pie"></i> Dashboard</a>
+      <a href="projects.html" class="nav-item"><i class="fas fa-project-diagram"></i> Projects</a>
+      <a href="gis.html" class="nav-item active"><i class="fas fa-map-marked-alt"></i> GIS</a>
+      <a href="dev.html" class="nav-item"><i class="fas fa-code"></i> Dev</a>
+      <a href="experience.html" class="nav-item"><i class="fas fa-graduation-cap"></i> Experience</a>
+    </div>
+    <div class="nav-section" style="margin-top: 1.8rem;">
+      <p>GIS tools</p>
+      <div><span class="skill-badge"><i class="fas fa-map"></i> QGIS</span><span class="skill-badge"><i class="fas fa-cube"></i> ArcGIS Pro</span><span class="skill-badge"><i class="fas fa-satellite"></i> ENVI</span></div>
+    </div>
+    <div class="sidebar-footer">
+      <div class="social-icons">
+        <a href="https://github.com/Daniell22-dot" target="_blank"><i class="fab fa-github"></i></a>
+        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+      <div><i class="fas fa-map-pin"></i> Nyeri, Kenya</div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="header-row">
+      <h2><i class="fas fa-map-marked-alt"></i> GIS & Spatial Analysis</h2>
+      <span class="tag" style="background: #d5e5f0; font-size: 0.8rem; padding: 0.3rem 1.2rem;">QGIS · ArcGIS Pro · PostGIS</span>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3><i class="fas fa-ship"></i> Marine Charts & Cruise Tools</h3><i class="fas fa-water"></i></div>
+      <div class="gis-item">
+        <div class="gis-title"><i class="fas fa-anchor"></i> Marine chart creation using QGIS</div>
+        <div class="gis-desc">Developed marine navigational charts using QGIS and the Cruise Tools plugin. Integrated bathymetric data and coastal features.</div>
+        <div><span class="tag">QGIS</span><span class="tag">Cruise Tools</span><span class="tag">Marine GIS</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3><i class="fas fa-database"></i> Geodata Browser & GeoNode</h3><i class="fas fa-cloud"></i></div>
+      <div class="gis-item">
+        <div class="gis-title"><i class="fas fa-folder-open"></i> Geodata Browser Plugin · GeoNode</div>
+        <div class="gis-desc">Worked with Geodata Browser plugin in QGIS for data discovery and management. Deployed and administered GeoNode instances for spatial data sharing.</div>
+        <div><span class="tag">GeoNode</span><span class="tag">QGIS</span><span class="tag">Spatial Data Infrastructure</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3><i class="fas fa-chart-bar"></i> ArcGIS Dashboards</h3><i class="fas fa-tachometer-alt"></i></div>
+      <div class="gis-item">
+        <div class="gis-title"><i class="fas fa-dashboard"></i> Interactive ArcGIS Dashboards</div>
+        <div class="gis-desc">Designed and published ArcGIS Dashboards for monitoring agricultural suitability, urban expansion, and environmental indicators.</div>
+        <div><span class="tag">ArcGIS Pro</span><span class="tag">Dashboard</span><span class="tag">Web GIS</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3><i class="fas fa-seedling"></i> Agricultural Suitability GIS</h3><i class="fas fa-globe-africa"></i></div>
+      <div class="gis-item">
+        <div class="gis-title"><i class="fas fa-map"></i> Multi-Indicator Suitability Mapping</div>
+        <div class="gis-desc">Weighted overlay analysis for 47 counties. Climate (40%), soil fertility (40%), growing days (20%). Produced suitability maps and priority zones.</div>
+        <div><span class="tag">Raster</span><span class="tag">Weighted Overlay</span><span class="tag">QGIS</span><span class="tag">ArcGIS</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3><i class="fas fa-bug"></i> Butterfly Habitat Suitability</h3><i class="fas fa-dna"></i></div>
+      <div class="gis-item">
+        <div class="gis-title"><i class="fas fa-butterfly"></i> MaxEnt Species Distribution Modeling</div>
+        <div class="gis-desc">Environmental predictors: elevation, temperature, precipitation. Model performance AUC 0.606. Mapped urban vs protected area suitability.</div>
+        <div><span class="tag">MaxEnt</span><span class="tag">R</span><span class="tag">GBIF</span><span class="tag">SDM</span></div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
