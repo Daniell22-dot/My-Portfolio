@@ -3,71 +3,56 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Daniel Manyasa — Geomatic Engineer & GIS Specialist. Portfolio showcasing GIS, spatial analysis, software development, cybersecurity, and IT support." />
+  <meta name="keywords" content="Geomatic Engineering, GIS, QGIS, ArcGIS, Python, R, React, Cybersecurity, OSINT, Windows, Ubuntu, IT Support, Kenya" />
+  <meta property="og:title" content="Daniel Manyasa · Geomatic Engineer & GIS" />
+  <meta property="og:description" content="Geomatic Engineering · GIS · Software Development · Cybersecurity · IT Support" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Daniel Manyasa · Geomatic Engineer & GIS" />
+  <meta name="twitter:description" content="Geomatic Engineering · GIS · Software Development · Cybersecurity · IT Support" />
   <title>Daniel Manyasa · Geomatic Engineer & GIS</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, system-ui, sans-serif; }
-    body { background: #f4f6f9; display: flex; min-height: 100vh; }
-    .sidebar {
-      width: 280px; background-color: #1e2b3a; color: #e6edf5; display: flex; flex-direction: column;
-      padding: 2rem 1.2rem; position: sticky; top: 0; height: 100vh; overflow-y: auto;
-      box-shadow: 2px 0 12px rgba(0,0,0,0.08); flex-shrink: 0; border-right: 1px solid #2c3e50;
+    .featured-list { display: flex; flex-direction: column; gap: 0.3rem; }
+    .featured-item { padding: 0.5rem 0; border-bottom: 1px solid #f0f3f7; }
+    .featured-item:last-child { border-bottom: 0; }
+    .featured-title { font-weight: 600; font-size: 0.9rem; color: #1e2b3c; }
+    .featured-title i { color: #2c6fbb; width: 1.4rem; }
+    .featured-desc { font-size: 0.8rem; color: #4a5a6e; padding-left: 1.4rem; }
+    .featured-tags { padding-left: 1.4rem; display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.15rem; }
+    .skill-group { margin-bottom: 0.6rem; }
+    .skill-group-title { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; color: #6a8aaa; font-weight: 600; margin-bottom: 0.3rem; }
+    .skill-group-badges { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+    .badge {
+      background: #f0f5fa;
+      padding: 0.15rem 0.65rem;
+      border-radius: 3px;
+      font-size: 0.7rem;
+      color: #1e2b3c;
+      border: 1px solid #dce5ef;
     }
-    .sidebar-brand { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2.2rem; padding-bottom: 1.2rem; border-bottom: 1px solid #3a4c5e; }
-    .sidebar-brand i { font-size: 2.2rem; color: #75b8e0; }
-    .sidebar-brand h1 { font-size: 1.45rem; font-weight: 500; letter-spacing: 0.3px; line-height: 1.2; }
-    .sidebar-brand h1 small { display: block; font-size: 0.8rem; font-weight: 300; color: #a3b8cc; margin-top: 0.1rem; }
-    .nav-section { margin-top: 1.2rem; }
-    .nav-section p { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: #7a93ab; margin-bottom: 0.6rem; }
-    .nav-item {
-      display: flex; align-items: center; gap: 0.8rem; padding: 0.6rem 0.8rem; border-radius: 8px;
-      color: #cddcec; transition: all 0.1s ease; cursor: pointer; font-size: 0.9rem; text-decoration: none;
+    .badge i { color: #2c6fbb; margin-right: 3px; }
+    .research-grid { display: flex; flex-wrap: wrap; gap: 0.8rem 1.5rem; }
+    .research-item { }
+    .research-tag {
+      background: #e8f0f8;
+      font-size: 0.65rem;
+      padding: 0.1rem 0.6rem;
+      border-radius: 3px;
+      color: #2c6fbb;
+      font-weight: 500;
     }
-    .nav-item i { width: 1.3rem; color: #6f93b0; }
-    .nav-item.active, .nav-item:hover { background-color: #2f4053; color: white; font-weight: 500; }
-    .nav-item.active i, .nav-item:hover i { color: #83c5f0; }
-    .sidebar-footer { margin-top: auto; padding-top: 1.8rem; font-size: 0.75rem; color: #7a93ab; border-top: 1px solid #2f4053; }
-    .sidebar-footer .social-icons { display: flex; gap: 1.2rem; font-size: 1.1rem; }
-    .sidebar-footer .social-icons a { color: #8ba6c0; transition: 0.2s; }
-    .sidebar-footer .social-icons a:hover { color: #b6d4f0; }
-    .main-content { flex: 1; padding: 2rem 2.5rem; background: #f4f6f9; overflow-y: auto; }
-    .header-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-    .header-row h2 { font-weight: 400; color: #1e2b3a; font-size: 1.8rem; }
-    .header-row h2 i { color: #2f6f9f; margin-right: 10px; }
-    .header-badge { background: white; padding: 0.4rem 1.2rem; border-radius: 40px; box-shadow: 0 2px 6px rgba(0,0,0,0.02); font-size: 0.9rem; border: 1px solid #d9e2ec; color: #1e3a5f; }
-    .value-box-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.2rem; margin-bottom: 2.2rem; }
-    .value-box { background: white; padding: 1rem 1.2rem; border-radius: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); border: 1px solid #e8edf4; }
-    .value-box .label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; color: #5c738b; }
-    .value-box .value { font-size: 1.6rem; font-weight: 600; color: #0b263b; margin-top: 4px; }
-    .card { background: white; border-radius: 16px; padding: 1.4rem 1.6rem 1.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.02); border: 1px solid #e2eaf2; margin-bottom: 1.8rem; }
-    .card-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eef3f8; padding-bottom: 0.8rem; margin-bottom: 1.2rem; }
-    .card-header h3 { font-weight: 500; font-size: 1.2rem; color: #1b344a; }
-    .card-header i { color: #3b6f96; font-size: 1.2rem; }
-    .card-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8rem; }
-    .project-item { display: flex; flex-direction: column; gap: 0.4rem; padding: 0.6rem 0; border-bottom: 1px solid #f0f5fa; }
-    .project-item:last-child { border-bottom: 0; }
-    .project-title { font-weight: 600; color: #142b40; }
-    .project-title i { color: #3a7aa0; width: 1.6rem; }
-    .project-desc { font-size: 0.88rem; color: #2a435d; padding-left: 1.8rem; }
-    .project-tags { padding-left: 1.8rem; display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.2rem; }
-    .tag { background: #e7eef7; font-size: 0.65rem; padding: 0.15rem 0.7rem; border-radius: 40px; color: #1b4a6b; letter-spacing: 0.3px; font-weight: 500; }
-    .btn-outline-shiny { background: transparent; border: 1px solid #b8cfdf; padding: 0.2rem 1rem; border-radius: 50px; font-size: 0.75rem; color: #1a4b6e; cursor: pointer; transition: 0.1s; text-decoration: none; display: inline-block; }
-    .btn-outline-shiny i { margin-right: 4px; }
-    .btn-outline-shiny:hover { background: #e7eef7; border-color: #8baec9; }
-    .skill-badge { background: #eaf1f9; padding: 0.2rem 1rem; border-radius: 40px; font-size: 0.75rem; color: #1f4460; border: 1px solid #d1e0eb; display: inline-block; margin: 0.2rem; }
-    .row-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8rem; }
-    @media (max-width: 1024px) { .card-grid-2, .row-2col { grid-template-columns: 1fr; } }
-    @media (max-width: 720px) { .sidebar { width: 220px; padding: 1.2rem 0.8rem; } .main-content { padding: 1.2rem; } .value-box-grid { grid-template-columns: 1fr 1fr; } }
-    @media (max-width: 550px) { body { flex-direction: column; } .sidebar { width: 100%; height: auto; position: relative; flex-direction: row; flex-wrap: wrap; padding: 1rem; gap: 0.5rem; border-right: none; border-bottom: 1px solid #2c3e50; } .sidebar-brand { margin-bottom: 0.2rem; border-bottom: none; padding-bottom: 0; flex: 1 1 100%; } .nav-section { display: flex; flex-wrap: wrap; gap: 0.2rem 0.5rem; margin-top: 0.2rem; } .nav-item { padding: 0.3rem 0.6rem; font-size: 0.8rem; } .sidebar-footer { display: none; } }
-    a { color: #1f6390; text-decoration: none; }
-    a:hover { text-decoration: underline; }
+    .research-desc { font-size: 0.78rem; color: #4a5a6e; margin-top: 0.1rem; }
   </style>
 </head>
 <body>
   <aside class="sidebar">
     <div class="sidebar-brand">
       <i class="fas fa-globe-africa"></i>
-      <h1>Daniel Manyasa <small>Geomatic Eng · GIS</small></h1>
+      <h1>Daniel Manyasa <small>Geomatic Eng · GIS · IT Support</small></h1>
     </div>
     <div class="nav-section">
       <p>Navigation</p>
@@ -77,24 +62,28 @@
       <a href="dev.html" class="nav-item"><i class="fas fa-code"></i> Dev</a>
       <a href="experience.html" class="nav-item"><i class="fas fa-graduation-cap"></i> Experience</a>
     </div>
-    <div class="nav-section" style="margin-top: 1.8rem;">
-      <p>Tools & stacks</p>
-      <div style="display: flex; flex-wrap: wrap; gap: 0.3rem 0.6rem;">
-        <span class="skill-badge"><i class="fab fa-python"></i> Python</span>
-        <span class="skill-badge"><i class="fas fa-database"></i> Postgres</span>
-        <span class="skill-badge"><i class="fab fa-react"></i> React</span>
-        <span class="skill-badge"><i class="fas fa-map"></i> QGIS</span>
-        <span class="skill-badge"><i class="fas fa-cube"></i> ArcGIS</span>
-        <span class="skill-badge"><i class="fas fa-road"></i> Civil 3D</span>
-        <span class="skill-badge"><i class="fas fa-leaf"></i> R</span>
+    <div class="nav-section">
+      <p>Core skills</p>
+      <div class="sidebar-skills">
+        <span class="skill-tag"><i class="fab fa-python"></i> Python</span>
+        <span class="skill-tag"><i class="fas fa-database"></i> Postgres</span>
+        <span class="skill-tag"><i class="fab fa-react"></i> React</span>
+        <span class="skill-tag"><i class="fas fa-map"></i> QGIS</span>
+        <span class="skill-tag"><i class="fas fa-cube"></i> ArcGIS</span>
+        <span class="skill-tag"><i class="fas fa-road"></i> Civil 3D</span>
+        <span class="skill-tag"><i class="fab fa-r-project"></i> R</span>
+        <span class="skill-tag"><i class="fas fa-shield-alt"></i> C#</span>
+        <span class="skill-tag"><i class="fab fa-windows"></i> Windows</span>
+        <span class="skill-tag"><i class="fab fa-ubuntu"></i> Ubuntu</span>
+        <span class="skill-tag"><i class="fas fa-tools"></i> IT Support</span>
       </div>
     </div>
     <div class="sidebar-footer">
       <div class="social-icons">
-        <a href="https://github.com/Daniell22-dot" target="_blank"><i class="fab fa-github"></i></a>
-        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-        <a href="#"><i class="fab fa-twitter"></i></a>
-        <a href="#"><i class="fas fa-envelope"></i></a>
+        <a href="https://github.com/Daniell22-dot" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        <a href="https://www.linkedin.com/in/daniel-manyasa-51128424b/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        <a href="https://twitter.com/danielmanyasa" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+        <a href="mailto:manyasadaniel630@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
       </div>
       <div><i class="fas fa-map-pin"></i> Nyeri, Kenya · DeKUT</div>
     </div>
@@ -102,83 +91,186 @@
 
   <main class="main-content">
     <div class="header-row">
-      <h2><i class="fas fa-tachometer-alt"></i> Portfolio dashboard</h2>
-      <span class="header-badge"><i class="fas fa-circle" style="color: #3ba36b; font-size: 0.5rem;"></i> Geomatic Engineer · GIS</span>
+      <h2><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
+      <span class="header-badge"><i class="fas fa-circle" style="color: #27ae60; font-size: 0.45rem;"></i> Geomatic Engineer · GIS · IT Support</span>
     </div>
+
+    <!-- Value boxes -->
     <div class="value-box-grid">
-      <div class="value-box"><div class="label"><i class="fas fa-map"></i> Counties assessed</div><div class="value">47</div><div class="sub">Agricultural Suitability</div></div>
-      <div class="value-box"><div class="label"><i class="fas fa-bug"></i> Butterfly records</div><div class="value">3,193</div><div class="sub">2000–2024 · 9 species</div></div>
-      <div class="value-box"><div class="label"><i class="fas fa-code"></i> Repositories</div><div class="value">12+</div><div class="sub">Python · R · JS</div></div>
-      <div class="value-box"><div class="label"><i class="fas fa-water"></i> Decomposition</div><div class="value">Kenya</div><div class="sub">microclimate · fauna</div></div>
-    </div>
-    <div class="card-grid-2">
-      <div class="card">
-        <div class="card-header"><h3><i class="fas fa-star" style="color: #e6a43b;"></i> Featured projects</h3><i class="fas fa-ellipsis-h"></i></div>
-        <div class="project-item">
-          <div class="project-title"><i class="fas fa-seedling"></i> Agricultural Suitability (Kenya)</div>
-          <div class="project-desc">Multi-indicator GIS · Climate 40% · Soil 40% · Growing days 20%</div>
-          <div class="project-tags"><span class="tag">Shiny</span><span class="tag">R</span><span class="tag">GIS</span></div>
-        </div>
-        <div class="project-item">
-          <div class="project-title"><i class="fas fa-butterfly"></i> Urban Butterfly Adaptation</div>
-          <div class="project-desc">MaxEnt · GBIF · 3,193 records · AUC 0.606</div>
-          <div class="project-tags"><span class="tag">R</span><span class="tag">MaxEnt</span></div>
-        </div>
-        <div class="project-item">
-          <div class="project-title"><i class="fas fa-tree"></i> Leaf Phenology (R)</div>
-          <div class="project-desc">Random forest · logistic regression · temperature · wind</div>
-          <div class="project-tags"><span class="tag">R</span><span class="tag">tidyverse</span></div>
-        </div>
-        <div class="project-item">
-          <div class="project-title"><i class="fas fa-database"></i> Postgres Manager (Electron)</div>
-          <div class="project-desc">PostgREST gateway · spatial viewer · JWT security</div>
-          <div class="project-tags"><span class="tag">Electron</span><span class="tag">React</span><span class="tag">PostGIS</span></div>
-        </div>
-        <div class="project-item">
-          <div class="project-title"><i class="fas fa-mobile-alt"></i> ORIA Finance (React Native)</div>
-          <div class="project-desc">Offline-first · fintech · chama · savings · biometric auth</div>
-          <div class="project-tags"><span class="tag">React Native</span><span class="tag">Expo</span></div>
-        </div>
-        <div style="margin-top: 0.6rem; display: flex; gap: 0.6rem; flex-wrap: wrap;">
-          <a href="https://github.com/Daniell22-dot" target="_blank" class="btn-outline-shiny"><i class="fab fa-github"></i> github.com/Daniell22-dot</a>
-          <a href="https://manyasa.shinyapps.io/AGRI/" target="_blank" class="btn-outline-shiny"><i class="fas fa-globe"></i> shinyapps.io/AGRI</a>
-        </div>
+      <div class="value-box value-box-blue">
+        <div class="label"><i class="fas fa-map"></i> Counties assessed</div>
+        <div class="value">47</div>
+        <div class="sub">Agricultural Suitability</div>
+        <i class="fas fa-globe-africa icon-bg"></i>
       </div>
-      <div>
-        <div class="card">
-          <div class="card-header"><h3><i class="fas fa-tools"></i> Core competencies</h3><i class="fas fa-cog"></i></div>
-          <div style="display: flex; flex-wrap: wrap; gap: 0.5rem 0.7rem; margin-bottom: 0.8rem;">
-            <span class="skill-badge"><i class="fas fa-map"></i> QGIS · ArcGIS Pro</span>
-            <span class="skill-badge"><i class="fas fa-draw-polygon"></i> Civil 3D</span>
-            <span class="skill-badge"><i class="fas fa-cubes"></i> ArchiCAD</span>
-            <span class="skill-badge"><i class="fas fa-satellite"></i> ENVI · Erdas</span>
-            <span class="skill-badge"><i class="fas fa-server"></i> Postgres · MySQL</span>
-            <span class="skill-badge"><i class="fab fa-python"></i> Python (OAuth2)</span>
-            <span class="skill-badge"><i class="fab fa-node-js"></i> Node.js · React</span>
-            <span class="skill-badge"><i class="fab fa-r-project"></i> R · Shiny</span>
+      <div class="value-box value-box-green">
+        <div class="label"><i class="fas fa-bug"></i> Butterfly records</div>
+        <div class="value">3,193</div>
+        <div class="sub">2000–2024 · 9 species</div>
+        <i class="fas fa-butterfly icon-bg"></i>
+      </div>
+      <div class="value-box value-box-orange">
+        <div class="label"><i class="fas fa-code"></i> Repositories</div>
+        <div class="value">15+</div>
+        <div class="sub">Python · R · JS · C#</div>
+        <i class="fas fa-code-branch icon-bg"></i>
+      </div>
+      <div class="value-box value-box-red">
+        <div class="label"><i class="fas fa-shield-alt"></i> Security tools</div>
+        <div class="value">OSINT</div>
+        <div class="sub">Windows · C# · Chrome Ext</div>
+        <i class="fas fa-shield-alt icon-bg"></i>
+      </div>
+      <div class="value-box value-box-teal">
+        <div class="label"><i class="fas fa-tools"></i> IT Support</div>
+        <div class="value">Win · Lin</div>
+        <div class="sub">Windows · Office · Ubuntu</div>
+        <i class="fas fa-desktop icon-bg"></i>
+      </div>
+    </div>
+
+    <!-- Two-column layout -->
+    <div class="card-grid-2">
+      <!-- Left: Featured Projects -->
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="fas fa-star" style="color: #e67e22;"></i> Featured projects</h3>
+          <span class="card-icon"><i class="fas fa-ellipsis-h"></i></span>
+        </div>
+        <div class="featured-list">
+          <div class="featured-item">
+            <div class="featured-title"><i class="fas fa-shield-alt"></i> Windows Security & OSINT Toolkit</div>
+            <div class="featured-desc">Blue Team & Red Team · C# desktop app · Chrome ext · Terminal tools</div>
+            <div class="featured-tags"><span class="tag">C#</span><span class="tag">.NET</span><span class="tag">OSINT</span><span class="tag">Chrome Ext</span></div>
+          </div>
+          <div class="featured-item">
+            <div class="featured-title"><i class="fas fa-seedling"></i> Agricultural Suitability (Kenya)</div>
+            <div class="featured-desc">Multi-indicator GIS · Climate 40% · Soil 40% · Growing days 20%</div>
+            <div class="featured-tags"><span class="tag">Shiny</span><span class="tag">R</span><span class="tag">GIS</span></div>
+          </div>
+          <div class="featured-item">
+            <div class="featured-title"><i class="fas fa-bug"></i> Urban Butterfly Adaptation</div>
+            <div class="featured-desc">MaxEnt · GBIF · 3,193 records · AUC 0.606</div>
+            <div class="featured-tags"><span class="tag">R</span><span class="tag">MaxEnt</span></div>
+          </div>
+          <div class="featured-item">
+            <div class="featured-title"><i class="fas fa-database"></i> Postgres Manager (Electron)</div>
+            <div class="featured-desc">PostgREST gateway · Spatial viewer · JWT security</div>
+            <div class="featured-tags"><span class="tag">Electron</span><span class="tag">React</span><span class="tag">PostGIS</span></div>
+          </div>
+          <div class="featured-item">
+            <div class="featured-title"><i class="fas fa-mobile-alt"></i> ORIA Finance (React Native)</div>
+            <div class="featured-desc">Offline-first fintech · Chama mgmt · Biometric auth</div>
+            <div class="featured-tags"><span class="tag">React Native</span><span class="tag">Expo</span></div>
           </div>
         </div>
+        <div style="margin-top: 0.6rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <a href="https://github.com/Daniell22-dot" target="_blank" class="btn-outline"><i class="fab fa-github"></i> GitHub</a>
+          <a href="https://manyasa.shinyapps.io/AGRI/" target="_blank" class="btn-outline"><i class="fas fa-globe"></i> Shiny App</a>
+        </div>
+      </div>
+
+      <!-- Right: Skills + Experience + Contact -->
+      <div>
+        <!-- Core competencies -->
         <div class="card">
-          <div class="card-header"><h3><i class="fas fa-briefcase"></i> Experience & service</h3><i class="fas fa-users"></i></div>
-          <ul style="list-style: none; font-size: 0.9rem; color: #1a334a;">
-            <li style="margin-bottom: 0.5rem;"><i class="fas fa-hand-holding-heart" style="color: #2f6f9f; width: 1.6rem;"></i> Peer counsellor & educator · DeKUT</li>
-            <li style="margin-bottom: 0.5rem;"><i class="fas fa-globe-africa" style="color: #2f6f9f; width: 1.6rem;"></i> Volunteer · GIS Corps</li>
-            <li style="margin-bottom: 0.5rem;"><i class="fas fa-water" style="color: #2f6f9f; width: 1.6rem;"></i> Attaché · NYEWASCO</li>
-            <li style="margin-bottom: 0.5rem;"><i class="fas fa-graduation-cap" style="color: #2f6f9f; width: 1.6rem;"></i> Final year project · Geomatic Eng</li>
+          <div class="card-header">
+            <h3><i class="fas fa-tools"></i> Core competencies</h3>
+            <span class="card-icon"><i class="fas fa-cog"></i></span>
+          </div>
+          <div class="skill-group">
+            <div class="skill-group-title"><i class="fas fa-map"></i> GIS & Geomatics</div>
+            <div class="skill-group-badges">
+              <span class="badge"><i class="fas fa-map"></i> QGIS</span>
+              <span class="badge"><i class="fas fa-cube"></i> ArcGIS Pro</span>
+              <span class="badge"><i class="fas fa-draw-polygon"></i> Civil 3D</span>
+              <span class="badge"><i class="fas fa-cubes"></i> ArchiCAD</span>
+              <span class="badge"><i class="fas fa-satellite"></i> ENVI</span>
+              <span class="badge"><i class="fas fa-satellite"></i> Erdas</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <div class="skill-group-title"><i class="fas fa-code"></i> Software Development</div>
+            <div class="skill-group-badges">
+              <span class="badge"><i class="fab fa-python"></i> Python</span>
+              <span class="badge"><i class="fab fa-node"></i> Node.js</span>
+              <span class="badge"><i class="fab fa-react"></i> React</span>
+              <span class="badge"><i class="fas fa-shield-alt"></i> C# .NET</span>
+              <span class="badge"><i class="fab fa-r-project"></i> R Shiny</span>
+              <span class="badge"><i class="fas fa-database"></i> Postgres</span>
+              <span class="badge"><i class="fas fa-database"></i> MySQL</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <div class="skill-group-title"><i class="fas fa-desktop"></i> IT Support & Systems</div>
+            <div class="skill-group-badges">
+              <span class="badge"><i class="fab fa-windows"></i> Windows 10/11</span>
+              <span class="badge"><i class="fab fa-microsoft"></i> MS Office</span>
+              <span class="badge"><i class="fab fa-ubuntu"></i> Ubuntu</span>
+              <span class="badge"><i class="fas fa-shield-alt"></i> Virus Removal</span>
+              <span class="badge"><i class="fas fa-exclamation-triangle"></i> BSOD Fix</span>
+              <span class="badge"><i class="fas fa-sync"></i> System Repair</span>
+              <span class="badge"><i class="fas fa-network-wired"></i> Networking</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Experience -->
+        <div class="card">
+          <div class="card-header">
+            <h3><i class="fas fa-briefcase"></i> Experience & service</h3>
+            <span class="card-icon"><i class="fas fa-users"></i></span>
+          </div>
+          <ul style="list-style: none; font-size: 0.85rem; color: #1e2b3c;">
+            <li style="margin-bottom: 0.4rem;"><i class="fas fa-hand-holding-heart" style="color: #2c6fbb; width: 1.5rem;"></i> Peer counsellor & educator · DeKUT</li>
+            <li style="margin-bottom: 0.4rem;"><i class="fas fa-globe-africa" style="color: #2c6fbb; width: 1.5rem;"></i> Volunteer · GIS Corps</li>
+            <li style="margin-bottom: 0.4rem;"><i class="fas fa-water" style="color: #2c6fbb; width: 1.5rem;"></i> Attaché · NYEWASCO</li>
+            <li style="margin-bottom: 0.4rem;"><i class="fas fa-tools" style="color: #2c6fbb; width: 1.5rem;"></i> IT Support · Windows/Ubuntu repair</li>
+            <li style="margin-bottom: 0.4rem;"><i class="fas fa-graduation-cap" style="color: #2c6fbb; width: 1.5rem;"></i> Final year project · Geomatic Eng</li>
           </ul>
+        </div>
+
+        <!-- Contact -->
+        <div class="card">
+          <div class="card-header">
+            <h3><i class="fas fa-envelope"></i> Get in touch</h3>
+            <span class="card-icon"><i class="fas fa-paper-plane"></i></span>
+          </div>
+          <div class="contact-links">
+            <a href="mailto:manyasadaniel630@gmail.com" class="contact-link"><i class="fas fa-envelope"></i> manyasadaniel630@gmail.com</a>
+            <a href="https://www.linkedin.com/in/daniel-manyasa-51128424b/" target="_blank" class="contact-link"><i class="fab fa-linkedin-in"></i> LinkedIn</a>
+            <a href="https://github.com/Daniell22-dot" target="_blank" class="contact-link"><i class="fab fa-github"></i> GitHub</a>
+          </div>
         </div>
       </div>
     </div>
-    <div style="margin-top: 0.5rem;">
-      <div class="card">
-        <div class="card-header"><h3><i class="fas fa-flask"></i> Research & methods</h3><i class="fas fa-chart-line"></i></div>
-        <div style="display: flex; flex-wrap: wrap; gap: 1.2rem 2rem;">
-          <div><span class="tag" style="background: #d5e5f0;">Agricultural Suitability Index</span> 0.346 ± 0.277 · Trans Nzoia 0.82</div>
-          <div><span class="tag" style="background: #d5e5f0;">MaxEnt (butterflies)</span> AUC 0.606 · 12.3% urban obs.</div>
-          <div><span class="tag" style="background: #d5e5f0;">Decomposition</span> microclimate vs fauna · coastal</div>
+
+    <!-- Research & Methods -->
+    <div class="card">
+      <div class="card-header">
+        <h3><i class="fas fa-flask"></i> Research & methods</h3>
+        <span class="card-icon"><i class="fas fa-chart-line"></i></span>
+      </div>
+      <div class="research-grid">
+        <div>
+          <span class="research-tag">Agricultural Suitability Index</span>
+          <div class="research-desc">0.346 ± 0.277 · Trans Nzoia 0.82</div>
+        </div>
+        <div>
+          <span class="research-tag">MaxEnt (butterflies)</span>
+          <div class="research-desc">AUC 0.606 · 12.3% urban obs.</div>
+        </div>
+        <div>
+          <span class="research-tag">Decomposition</span>
+          <div class="research-desc">Microclimate vs fauna · coastal</div>
+        </div>
+        <div>
+          <span class="research-tag">OSINT Toolkit</span>
+          <div class="research-desc">Blue/Red Team · C# · Chrome Ext</div>
         </div>
       </div>
     </div>
   </main>
 </body>
 </html>
+
