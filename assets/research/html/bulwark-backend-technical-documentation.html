@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10.1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Bulwark - Backend Technical Documentation</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../research.css" />
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Bulwark - Backend Technical Documentation</h1>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#bulwark-backend-pythonfastapi" id="toc-bulwark-backend-pythonfastapi">Bulwark Backend (Python/FastAPI)</a>
+<ul>
+<li><a href="#quick-deploy-free-tier-options" id="toc-quick-deploy-free-tier-options">Quick Deploy (Free Tier Options)</a>
+<ul>
+<li><a href="#render-recommended---free-web-service" id="toc-render-recommended---free-web-service">Render (Recommended - Free Web Service)</a></li>
+<li><a href="#fly.io" id="toc-fly.io">Fly.io</a></li>
+<li><a href="#railway" id="toc-railway">Railway</a></li>
+</ul></li>
+<li><a href="#local-dev" id="toc-local-dev">Local Dev</a></li>
+<li><a href="#github-actions-setup" id="toc-github-actions-setup">GitHub Actions Setup</a>
+<ul>
+<li><a href="#complete-workflow-suite" id="toc-complete-workflow-suite">Complete Workflow Suite</a></li>
+<li><a href="#required-repository-secrets" id="toc-required-repository-secrets">Required Repository Secrets</a></li>
+<li><a href="#optional-manual-triggers" id="toc-optional-manual-triggers">Optional Manual Triggers</a></li>
+</ul></li>
+<li><a href="#c-agent-integration" id="toc-c-agent-integration">C# Agent Integration</a></li>
+<li><a href="#web-scanner-playwright-deep-scan" id="toc-web-scanner-playwright-deep-scan">Web Scanner (Playwright Deep Scan)</a></li>
+<li><a href="#frontend-data-flow-no-backend-server-needed" id="toc-frontend-data-flow-no-backend-server-needed">Frontend Data Flow (No Backend Server Needed)</a></li>
+<li><a href="#environment-variables" id="toc-environment-variables">Environment Variables</a></li>
+<li><a href="#extending" id="toc-extending">Extending</a></li>
+<li><a href="#security-posture-automation" id="toc-security-posture-automation">Security Posture Automation</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="bulwark-backend-pythonfastapi">Bulwark Backend (Python/FastAPI)</h1>
+<p>Cloud telemetry ingest + scheduled scans + GitHub Actions automation for the Bulwark website.</p>
+<h2 id="quick-deploy-free-tier-options">Quick Deploy (Free Tier Options)</h2>
+<h3 id="render-recommended---free-web-service">Render (Recommended - Free Web Service)</h3>
+<ol type="1">
+<li>Connect this repo to Render</li>
+<li>New &gt; Web Service &gt; Docker</li>
+<li>Dockerfile path: <code>backend/Dockerfile</code></li>
+<li>Add env vars:
+<ul>
+<li><code>GITHUB_TOKEN</code> = repo-scoped PAT with <code>contents:write</code></li>
+<li><code>GITHUB_REPO</code> = <code>your-org/bulwark</code></li>
+<li><code>GITHUB_BRANCH</code> = <code>main</code></li>
+</ul></li>
+<li>Add persistent disk: <code>/app/data</code> (1 GB free)</li>
+</ol>
+<h3 id="fly.io">Fly.io</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">fly</span> launch <span class="at">--dockerfile</span> backend/Dockerfile</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">fly</span> volumes create bulwark_data <span class="at">--size</span> 1</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">fly</span> secrets set GITHUB_TOKEN=... GITHUB_REPO=...</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">fly</span> deploy</span></code></pre></div>
+<h3 id="railway">Railway</h3>
+<ul>
+<li>Connect repo &gt; Add Service &gt; Dockerfile &gt; <code>backend/Dockerfile</code></li>
+<li>Add volume for <code>/app/data</code></li>
+</ul>
+<h2 id="local-dev">Local Dev</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> backend</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-r</span> requirements.txt</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">DATA_DIR</span><span class="op">=</span>./data</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">uvicorn</span> app.main:app <span class="at">--reload</span> <span class="at">--port</span> 8000</span></code></pre></div>
+<p>Test:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Send test telemetry</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-X</span> POST http://localhost:8000/telemetry <span class="dt">\</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Content-Type: application/json&quot;</span> <span class="dt">\</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-d</span> <span class="st">&#39;{</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;agent_id&quot;: &quot;test-agent-001&quot;,</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;host&quot;: &quot;DESKTOP-ABC&quot;,</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;ip&quot;: &quot;192.168.1.50&quot;,</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;os&quot;: &quot;Windows 11&quot;,</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;events&quot;: [</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="st">      {&quot;type&quot;: &quot;canary_trip&quot;, &quot;severity&quot;: &quot;critical&quot;, &quot;message&quot;: &quot;Credential canary triggered&quot;},</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="st">      {&quot;type&quot;: &quot;etw_evasion&quot;, &quot;severity&quot;: &quot;high&quot;, &quot;message&quot;: &quot;ETW patching detected&quot;}</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="st">    ]</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="st">  }&#39;</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Get dashboard data</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> http://localhost:8000/api/dashboard</span></code></pre></div>
+<h2 id="github-actions-setup">GitHub Actions Setup</h2>
+<p>Add these repository secrets: - <code>GITHUB_TOKEN</code> - auto-provided, but ensure workflow has <code>contents: write</code> - <code>WEB_SCAN_TARGETS</code> - comma-separated URLs for scheduled web scans (e.g., <code>https://example.com,https://api.example.com</code>)</p>
+<h3 id="complete-workflow-suite">Complete Workflow Suite</h3>
+<table>
+<colgroup>
+<col style="width: 34%" />
+<col style="width: 34%" />
+<col style="width: 31%" />
+</colgroup>
+<thead>
+<tr>
+<th>Workflow</th>
+<th>Schedule</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>threat-feeds.yml</code></td>
+<td>Every 6h</td>
+<td>Fetch FireHOL, DShield, Feodo, SSLBL, URLhaus → <code>data/threat_intel.json</code></td>
+</tr>
+<tr>
+<td><code>fleet-consensus.yml</code></td>
+<td>After threat feeds</td>
+<td>Correlate threat intel with agent telemetry → <code>data/fleet_consensus.json</code></td>
+</tr>
+<tr>
+<td><code>refresh-intel.yml</code></td>
+<td>Every 6h</td>
+<td>Build blocklist for <code>/check</code> page → <code>data/blocklist.json</code></td>
+</tr>
+<tr>
+<td><code>scheduled-scans.yml</code></td>
+<td>Daily 02:00 UTC</td>
+<td>Web vuln scan (HTTP, TLS, headers, Playwright deep scan) + repo secret scan</td>
+</tr>
+<tr>
+<td><code>telemetry-rollup.yml</code></td>
+<td>Hourly</td>
+<td>Aggregate agent telemetry → <code>data/telemetry_summary.json</code></td>
+</tr>
+<tr>
+<td><code>alert-check.yml</code></td>
+<td>Every 15 min</td>
+<td>Create GitHub Issues on critical telemetry events</td>
+</tr>
+<tr>
+<td><code>fleet-consensus.yml</code></td>
+<td>After threat feeds</td>
+<td>Correlate threat feeds with fleet sightings</td>
+</tr>
+<tr>
+<td><code>dependency-autopatch.yml</code></td>
+<td>Weekly Mon 03:00</td>
+<td>Detect vulns → branch → test → PR</td>
+</tr>
+<tr>
+<td><code>sast-container-iac.yml</code></td>
+<td>Weekly Sun 04:00 / PR</td>
+<td>CodeQL SAST, Trivy container, tfsec/checkov IaC, TruffleHog secrets</td>
+</tr>
+<tr>
+<td><code>security-posture.yml</code></td>
+<td>Daily 06:00 UTC</td>
+<td>Collect metrics, create GitHub Issues on critical findings</td>
+</tr>
+<tr>
+<td><code>security-posture.yml</code></td>
+<td>Daily 06:00 UTC</td>
+<td>Security posture dashboard metrics</td>
+</tr>
+<tr>
+<td><code>dependency-autopatch.yml</code></td>
+<td>Weekly Mon 03:00</td>
+<td>Auto-patch vulnerable deps → test → PR</td>
+</tr>
+<tr>
+<td><code>sast-container-iac.yml</code></td>
+<td>Weekly / PR</td>
+<td>CodeQL SAST, Trivy container, tfsec/checkov IaC, TruffleHog</td>
+</tr>
+<tr>
+<td><code>security-posture.yml</code></td>
+<td>Daily 06:00 UTC</td>
+<td>Security posture dashboard + alerts</td>
+</tr>
+</tbody>
+</table>
+<h3 id="required-repository-secrets">Required Repository Secrets</h3>
+<ul>
+<li><code>GITHUB_TOKEN</code> - auto-provided, ensure <code>contents: write</code> permission</li>
+<li><code>WEB_SCAN_TARGETS</code> - comma-separated URLs (e.g., <code>https://example.com,https://api.example.com</code>)</li>
+</ul>
+<h3 id="optional-manual-triggers">Optional Manual Triggers</h3>
+<p>All workflows support <code>workflow_dispatch</code> for manual runs. Some have inputs: - <code>scheduled-scans.yml</code>: <code>deep_scan</code> (boolean) — enable Playwright deep scan - <code>dependency-autopatch.yml</code>: <code>auto_merge</code> (boolean) — auto-merge PR if tests pass</p>
+<h2 id="c-agent-integration">C# Agent Integration</h2>
+<p>In your C# agent, POST to <code>/telemetry</code>:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode csharp"><code class="sourceCode cs"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">var</span> payload <span class="op">=</span> <span class="kw">new</span> <span class="op">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    agent_id <span class="op">=</span> <span class="st">&quot;bulwark-agent-&quot;</span> <span class="op">+</span> Environment<span class="op">.</span><span class="fu">MachineName</span><span class="op">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    host <span class="op">=</span> Environment<span class="op">.</span><span class="fu">MachineName</span><span class="op">,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    ip <span class="op">=</span> <span class="fu">GetLocalIP</span><span class="op">(),</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    os <span class="op">=</span> Environment<span class="op">.</span><span class="fu">OSVersion</span><span class="op">.</span><span class="fu">ToString</span><span class="op">(),</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    events <span class="op">=</span> events<span class="op">.</span><span class="fu">Select</span><span class="op">(</span>e <span class="op">=&gt;</span> <span class="kw">new</span> <span class="op">{</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        type <span class="op">=</span> e<span class="op">.</span><span class="fu">Type</span><span class="op">,</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        severity <span class="op">=</span> e<span class="op">.</span><span class="fu">Severity</span><span class="op">.</span><span class="fu">ToString</span><span class="op">().</span><span class="fu">ToLower</span><span class="op">(),</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        message <span class="op">=</span> e<span class="op">.</span><span class="fu">Message</span><span class="op">,</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        timestamp <span class="op">=</span> DateTime<span class="op">.</span><span class="fu">UtcNow</span><span class="op">.</span><span class="fu">ToString</span><span class="op">(</span><span class="st">&quot;o&quot;</span><span class="op">),</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        metadata <span class="op">=</span> e<span class="op">.</span><span class="fu">Metadata</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">})</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>await httpClient<span class="op">.</span><span class="fu">PostAsJsonAsync</span><span class="op">(</span><span class="st">&quot;https://your-backend.onrender.com/telemetry&quot;</span><span class="op">,</span> payload<span class="op">);</span></span></code></pre></div>
+<h2 id="web-scanner-playwright-deep-scan">Web Scanner (Playwright Deep Scan)</h2>
+<p>The scanner supports two modes:</p>
+<p><strong>Fast mode</strong> (default): HTTP-only checks — headers, TLS, cookies, tech fingerprinting, sensitive paths, forms, SRI.</p>
+<p><strong>Deep scan</strong> (<code>DEEP_SCAN=true</code> + <code>USE_PLAYWRIGHT=true</code>): Full Chromium rendering — DOM XSS sinks, rendered DOM forms, mixed content, console errors, network errors.</p>
+<p>Enable via workflow input or env vars:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">env</span><span class="kw">:</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">USE_PLAYWRIGHT</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">DEEP_SCAN</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span></code></pre></div>
+<h2 id="frontend-data-flow-no-backend-server-needed">Frontend Data Flow (No Backend Server Needed)</h2>
+<pre><code>GitHub Actions (scheduled) → Fetch feeds → SQLite → JSON export → Commit to repo
+                                                        ↓
+                                          Frontend reads data/*.json (no API)
+                                                        ↓
+                                          Dashboard displays live stats</code></pre>
+<p>All dashboard data comes from JSON files in <code>data/</code> committed by workflows: - <code>data/threat_intel.json</code> — raw threat feeds - <code>data/fleet_consensus.json</code> — threat intel + fleet correlation - <code>data/blocklist.json</code> — <code>/check</code> page blocklist - <code>data/web_scan_latest.json</code> — web vulnerability scan results - <code>data/telemetry_summary.json</code> — hourly agent telemetry rollup - <code>data/fleet_consensus.json</code> — threat intel + fleet sightings - <code>security_metrics.json</code> — daily security posture metrics</p>
+<h2 id="environment-variables">Environment Variables</h2>
+<table>
+<thead>
+<tr>
+<th>Var</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DATA_DIR</code></td>
+<td>No</td>
+<td><code>./data</code></td>
+<td>SQLite/JSON storage path</td>
+</tr>
+<tr>
+<td><code>PORT</code></td>
+<td>No</td>
+<td><code>8000</code></td>
+<td>HTTP port</td>
+</tr>
+<tr>
+<td><code>GITHUB_TOKEN</code></td>
+<td>Yes*</td>
+<td>-</td>
+<td>PAT for committing data/creating issues</td>
+</tr>
+<tr>
+<td><code>GITHUB_REPO</code></td>
+<td>Yes*</td>
+<td>-</td>
+<td><code>owner/repo</code> for sync</td>
+</tr>
+<tr>
+<td><code>GITHUB_BRANCH</code></td>
+<td>No</td>
+<td><code>main</code></td>
+<td>Target branch</td>
+</tr>
+<tr>
+<td><code>USE_PLAYWRIGHT</code></td>
+<td>No</td>
+<td><code>false</code></td>
+<td>Enable Playwright deep scan</td>
+</tr>
+<tr>
+<td><code>DEEP_SCAN</code></td>
+<td>No</td>
+<td><code>false</code></td>
+<td>Run Playwright deep scan</td>
+</tr>
+</tbody>
+</table>
+<p>*Required for GitHub sync/alerts. Omit if running standalone.</p>
+<h2 id="extending">Extending</h2>
+<p>Add routes in <code>app/routes/</code> and register in <code>app/main.py</code>. The pattern: - Telemetry in = POST <code>/telemetry</code> - Dashboard out = GET <code>/api/dashboard</code> - Actions consume <code>data/*.json</code> exports - Frontend consumes <code>data/*.json</code> directly</p>
+<p>No auth, no user accounts, pure GitHub Actions automation.</p>
+<h2 id="security-posture-automation">Security Posture Automation</h2>
+<p>The repo now has <strong>full security automation</strong>:</p>
+<ol type="1">
+<li><strong>Vulnerability Detection</strong>: CodeQL (SAST), Trivy (container), tfsec/checkov (IaC), TruffleHog (secrets), pip-audit/safety (deps)</li>
+<li><strong>Auto-Remediation</strong>: Dependency autopatcher creates tested PRs</li>
+<li><strong>Continuous Monitoring</strong>: Daily security posture checks → GitHub Issues on critical findings</li>
+<li><strong>Threat Intelligence</strong>: 6-hourly feeds + fleet consensus correlation</li>
+<li><strong>Active Scanning</strong>: Daily web scans + weekly repo secret scans</li>
+<li><strong>Alerting</strong>: 15-min critical telemetry alerts → GitHub Issues; daily posture alerts → GitHub Issues</li>
+</ol>
+<p>All results visible in GitHub Security tab, Actions artifacts, and the static frontend dashboard.</p>
+</body>
+</html>

@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10.1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Windows Security &amp; OSINT Toolkit - Research Paper</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="../research.css" />
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Windows Security &amp; OSINT Toolkit - Research Paper</h1>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#abstract" id="toc-abstract">Abstract</a></li>
+<li><a href="#keywords" id="toc-keywords">Keywords</a></li>
+<li><a href="#introduction" id="toc-introduction">1. Introduction</a></li>
+<li><a href="#related-work-apa-7-style" id="toc-related-work-apa-7-style">2. Related Work (APA 7 style)</a></li>
+<li><a href="#system-architecture" id="toc-system-architecture">3. System Architecture</a></li>
+<li><a href="#methodology" id="toc-methodology">4. Methodology</a></li>
+<li><a href="#workflows-and-diagrams" id="toc-workflows-and-diagrams">5. Workflows and Diagrams</a>
+<ul>
+<li><a href="#figure-1.-system-architecture-workflow-high-level" id="toc-figure-1.-system-architecture-workflow-high-level">Figure 1. System Architecture Workflow (High-level)</a></li>
+<li><a href="#figure-2.-rest-api-request-processing-pipeline-specification-based" id="toc-figure-2.-rest-api-request-processing-pipeline-specification-based">Figure 2. REST API Request Processing Pipeline (Specification-based)</a></li>
+<li><a href="#figure-3.-firewallwatcher-workflow" id="toc-figure-3.-firewallwatcher-workflow">Figure 3. FirewallWatcher Workflow</a></li>
+<li><a href="#figure-4.-networkscanner-workflow" id="toc-figure-4.-networkscanner-workflow">Figure 4. NetworkScanner Workflow</a></li>
+<li><a href="#figure-5.-bruteforcedetector-workflow" id="toc-figure-5.-bruteforcedetector-workflow">Figure 5. BruteForceDetector Workflow</a></li>
+<li><a href="#figure-6.-devicetracker-workflow" id="toc-figure-6.-devicetracker-workflow">Figure 6. DeviceTracker Workflow</a></li>
+<li><a href="#figure-7.-sitereputation-workflow" id="toc-figure-7.-sitereputation-workflow">Figure 7. SiteReputation Workflow</a></li>
+<li><a href="#figure-8.-vpnmanager-workflow" id="toc-figure-8.-vpnmanager-workflow">Figure 8. VPNManager Workflow</a></li>
+<li><a href="#figure-9.-antireverseengineering-workflow" id="toc-figure-9.-antireverseengineering-workflow">Figure 9. AntiReverseEngineering Workflow</a></li>
+<li><a href="#figure-10.-gui-to-tool-execution-workflow" id="toc-figure-10.-gui-to-tool-execution-workflow">Figure 10. GUI-to-Tool Execution Workflow</a></li>
+</ul></li>
+<li><a href="#results-and-evaluation-plan" id="toc-results-and-evaluation-plan">6. Results and Evaluation Plan</a></li>
+<li><a href="#discussion" id="toc-discussion">7. Discussion</a></li>
+<li><a href="#limitations" id="toc-limitations">8. Limitations</a></li>
+<li><a href="#conclusion" id="toc-conclusion">9. Conclusion</a></li>
+<li><a href="#references" id="toc-references">10. References</a></li>
+<li><a href="#appendix-a.-rest-api-endpoint-summary" id="toc-appendix-a.-rest-api-endpoint-summary">Appendix A. REST API Endpoint Summary</a></li>
+<li><a href="#appendix-b.-system-workflow-figures" id="toc-appendix-b.-system-workflow-figures">Appendix B. System Workflow Figures</a></li>
+<li><a href="#tables" id="toc-tables">Tables</a>
+<ul>
+<li><a href="#table-1.-component-inventory-and-responsibilities" id="toc-table-1.-component-inventory-and-responsibilities">Table 1. Component Inventory and Responsibilities</a></li>
+<li><a href="#table-2.-rest-api-endpoints-specification-summary" id="toc-table-2.-rest-api-endpoints-specification-summary">Table 2. REST API Endpoints (Specification Summary)</a></li>
+</ul></li>
+</ul>
+</nav>
+<p><strong>Windows Security Tools Suite v2.0: Integrated Blue-Team Monitoring and Red-Team Testing Framework for Windows Environments</strong></p>
+<p>Author: Daniel Manyasa</p>
+<p>Date: 2026-07-07</p>
+<h1 id="abstract">Abstract</h1>
+<p>This paper presents a Windows-oriented security toolkit that integrates defensive monitoring (blue-team) modules with offensive testing components (red-team) under an orchestration layer and optional REST API control plane. The system architecture couples endpoint telemetry acquisition (e.g., Windows EventLog, firewall rule baselines, TCP connection tables, ARP discovery) with heuristic analytics (port-scan detection, brute-force detection, site reputation scoring, device tracking) and active response actions (rule-based blocking and VPN tunnel routing). The paper provides an implementation-informed architecture description, detailed workflow flowcharts for each subsystem, and tabulated mappings of modules, data sources, decisions, and outputs. A ResearchGate-ready document is produced with APA-style referencing guidance. Where empirical measurement is not available in the repository, illustrative validation approaches and metric definitions are provided to support reproducibility.</p>
+<h1 id="keywords">Keywords</h1>
+<p>Windows security, endpoint monitoring, firewall analytics, network scanning, reputation scoring, VPN tunneling, anti-debugging</p>
+<h1 id="introduction">1. Introduction</h1>
+<p>Windows security operations require continuous visibility into endpoint behavior, network exposure, and configuration integrity. The Windows Security Tools Suite v2.0 is designed to support authorized and educational security testing by integrating defensive monitoring modules with red-team testing components under a unified user interface and specification-driven control plane.</p>
+<p>The toolkit’s goals are: (a) provide actionable telemetry for firewall and network events; (b) support heuristic detection of suspicious patterns such as brute-force attempts and port scanning; (c) provide contextual enrichment (device vendor/hostname, OS heuristics, and site reputation scores); (d) enable controlled network routing using tunnel/VPN features; and (e) incorporate anti-analysis checks in the protection layer. Ethical constraints are emphasized: monitoring and testing are intended only for systems where the operator has explicit written authorization.</p>
+<h1 id="related-work-apa-7-style">2. Related Work (APA 7 style)</h1>
+<p>This section should include peer-reviewed works relevant to endpoint telemetry, firewall analytics, network scanning methodology, phishing/reputation heuristics, and anti-tamper/anti-debugging. References are included in Section 10 in APA 7 format. Suggested topics include: host-based intrusion detection, firewall log analysis, active probing and safe scanning practices, reputation scoring for URLs, and program hardening.</p>
+<h1 id="system-architecture">3. System Architecture</h1>
+<p>The architecture integrates a WPF GUI for orchestration, defensive (blue-team) modules for telemetry and detection/response, a protection subsystem for anti-analysis checks, and a specification-driven REST API layer for automation and external control.</p>
+<p>System architecture and workflows are shown as Figures 1–10.</p>
+<h1 id="methodology">4. Methodology</h1>
+<p>Methodology is aligned with implementation behavior: each module defines specific input sources (e.g., EventLog, netsh outputs, TCP tables, ARP), then applies deterministic or heuristic decision rules. Validation can be performed using controlled test environments: (a) generate controlled firewall changes; (b) simulate failed authentication and port-scan patterns; (c) use a controlled subnet with known hosts for scanning; and (d) test URLs across benign and malicious datasets.</p>
+<h1 id="workflows-and-diagrams">5. Workflows and Diagrams</h1>
+<p>Flowcharts are included to document execution logic and dataflow across modules.</p>
+<p>Figures are included as text-based flowcharts to maintain compatibility with Word automation.</p>
+<h2 id="figure-1.-system-architecture-workflow-high-level">Figure 1. System Architecture Workflow (High-level)</h2>
+<p>GUI Dashboard (WPF)<br />
+|<br />
+v<br />
+Tool Orchestrator / Runner<br />
+|------------------------------|------------------------------|<br />
+v v v<br />
+Blue Team Modules Protection / Anti-Tamper REST API Layer (planned/spec)<br />
+FirewallWatcher AntiReverseEngineering /api/* endpoint handlers<br />
+NetworkScanner (fail-fast on debugger)<br />
+BruteForceDetector<br />
+DeviceTracker<br />
+SiteReputation<br />
+VPNManager<br />
+|<br />
+v<br />
+Unified Logging &amp; Report Generation<br />
+|<br />
+v<br />
+User-facing outputs (UI + files)</p>
+<h2 id="figure-2.-rest-api-request-processing-pipeline-specification-based">Figure 2. REST API Request Processing Pipeline (Specification-based)</h2>
+<p>Client Request<br />
+|<br />
+v<br />
+Authentication / API Key or Bearer<br />
+|<br />
+v<br />
+Route Handler (e.g., /api/vpn/connect)<br />
+|<br />
+v<br />
+Module Invocation (VPN/Scanner/Firewall/etc.)<br />
+|<br />
+v<br />
+Input Validation and Parameter Parsing<br />
+|<br />
+v<br />
+Execution (async for long-running tasks)<br />
+|<br />
++--&gt; Immediate Response: status accepted/running<br />
+|<br />
++--&gt; Polling endpoints: status/results<br />
+|<br />
+v<br />
+Final outputs: JSON/HTML/CSV report or stats</p>
+<h2 id="figure-3.-firewallwatcher-workflow">Figure 3. FirewallWatcher Workflow</h2>
+<p>Start<br />
+|<br />
+v<br />
+Load Baseline Rules via netsh<br />
+|<br />
+v<br />
+Periodic Loop (e.g., every 10 seconds)<br />
+|<br />
++--&gt; Fetch current rules<br />
+| |<br />
+| +--&gt; Compare: newRules / removedRules<br />
+| |<br />
+| +--&gt; If changes: append change log<br />
+|<br />
++--&gt; Read active TCP connections via IP Helper<br />
+|<br />
++--&gt; Mark suspicious:<br />
+- remote IP matches blocked list<br />
+- unusual connection states (TIME_WAIT/CLOSE_WAIT)<br />
+|<br />
+v<br />
+Optional: Block/Unblock rules using netsh<br />
+|<br />
+v<br />
+Stop / cancellation</p>
+<h2 id="figure-4.-networkscanner-workflow">Figure 4. NetworkScanner Workflow</h2>
+<p>Start Full/Quick scan<br />
+|<br />
+v<br />
+Host discovery:<br />
+- ARP discovery (primary)<br />
+- Ping sweep fallback (if none found)<br />
+|<br />
+v<br />
+For each live host:<br />
+- Resolve hostname (DNS)<br />
+- Acquire MAC + vendor (ARP + lookup)<br />
+- Ping RTT + TTL<br />
+- Guess OS using TTL profiles<br />
+- TCP connect scan with concurrency<br />
+- For open ports: map common service; optional banner probe<br />
+|<br />
+v<br />
+Risk analysis (heuristic features)<br />
+|<br />
+v<br />
+Export outputs (HTML/CSV/JSON strings)<br />
+|<br />
+v<br />
+End</p>
+<h2 id="figure-5.-bruteforcedetector-workflow">Figure 5. BruteForceDetector Workflow</h2>
+<p>Start monitoring<br />
+|<br />
++--&gt; EventLog watcher (Security log)<br />
+| - Read Event ID 4625 (failed logons)<br />
+| - Parse source IP and user<br />
+| - Maintain rolling window per IP (e.g., 60s)<br />
+| - If threshold reached (e.g., 5 fails):<br />
+| raise alert and auto-block IP via firewall<br />
+|<br />
++--&gt; Network monitor (TCP connection patterns)<br />
+- Track distinct ports per remote IP in short window<br />
+- If scan-like pattern detected (e.g., &gt;=10 ports / 5s):<br />
+raise alert and auto-block IP<br />
+|<br />
+v<br />
+Periodic cleanup (remove old entries)<br />
+|<br />
+v<br />
+Stop</p>
+<h2 id="figure-6.-devicetracker-workflow">Figure 6. DeviceTracker Workflow</h2>
+<p>Start device scan<br />
+|<br />
+v<br />
+Determine local subnet (from local IP)<br />
+|<br />
+v<br />
+ARP scan across host range (1–254)<br />
+|<br />
+v<br />
+For each responding device:<br />
+- Capture MAC, vendor, hostname<br />
+- Detect phone-like MAC prefix (heuristic)<br />
+|<br />
+v<br />
+Update tracked device dictionary (by MAC):<br />
+- New device: add and append event<br />
+- Existing device: update LastSeen/metadata<br />
+|<br />
++--&gt; Optional: TrackByMACAsync (poll loop)<br />
+|<br />
++--&gt; Optional: DetectPhoneIMEIAsync (WMI/ADB checks)<br />
+|<br />
+v<br />
+End</p>
+<h2 id="figure-7.-sitereputation-workflow">Figure 7. SiteReputation Workflow</h2>
+<p>Input URL(s)<br />
+|<br />
+v<br />
+Normalize URL scheme (default https)<br />
+|<br />
+v<br />
+Domain analysis (structure, TLDs, hyphens, length, subdomains)<br />
+|<br />
+v<br />
+SSL analysis (certificate validity, self-signed, expiration windows)<br />
+|<br />
+v<br />
+HTTP analysis:<br />
+- response status<br />
+- security headers present?<br />
+- content patterns: hidden iframe, JS redirects, hidden inputs collecting sensitive data<br />
+- phishing keywords count<br />
+- redirect host mismatch<br />
+|<br />
+v<br />
+Aggregate scores -&gt; total score (0–100)<br />
+|<br />
+v<br />
+Assign grade and list threat indicators<br />
+|<br />
+v<br />
+Output SiteScore</p>
+<h2 id="figure-8.-vpnmanager-workflow">Figure 8. VPNManager Workflow</h2>
+<p>Start VPN connect<br />
+|<br />
+v<br />
+Attempt SSH tunnel:<br />
+- locate ssh.exe or plink.exe<br />
+- launch ssh with local port forwarding<br />
+|<br />
++-- If SSH client missing/fails --&gt; fallback<br />
+Start SOCKS5 proxy at localhost:localPort<br />
+- accept client<br />
+- negotiate SOCKS5<br />
+- connect to destination<br />
+- relay traffic bidirectionally<br />
+|<br />
+v<br />
+Validate tunnel (optional connectivity test)<br />
+|<br />
+v<br />
+Expose stats and stop/cleanup on request</p>
+<h2 id="figure-9.-antireverseengineering-workflow">Figure 9. AntiReverseEngineering Workflow</h2>
+<p>Execution entry<br />
+|<br />
+v<br />
+CheckDebugger:<br />
+- IsDebuggerPresent<br />
+- CheckRemoteDebuggerPresent<br />
+- timing anomaly checks<br />
+|<br />
++--&gt; If debugger/anomaly detected: Environment.FailFast<br />
+|<br />
+v<br />
+CheckAnalysisTools (optional):<br />
+- enumerate processes; detect known analysis tooling names<br />
+|<br />
++--&gt; If analysis tool present: FailFast<br />
+|<br />
+v<br />
+Integrity checks (optional): verify assembly hash<br />
+|<br />
+v<br />
+Continue execution if checks pass</p>
+<h2 id="figure-10.-gui-to-tool-execution-workflow">Figure 10. GUI-to-Tool Execution Workflow</h2>
+<p>User selects tool<br />
+|<br />
+v<br />
+WPF RunButton clicked<br />
+|<br />
+v<br />
+Create CancellationTokenSource<br />
+|<br />
+v<br />
+ExecuteTool() switch:<br />
+- PortScanner<br />
+- ProcessMonitor<br />
+- NetworkAnalyzer<br />
+- AntiDebug check<br />
+|<br />
+v<br />
+Tool writes status/log to UI console<br />
+|<br />
+v<br />
+StopButton cancels token -&gt; tool ends<br />
+|<br />
+v<br />
+Return to Ready state</p>
+<h1 id="results-and-evaluation-plan">6. Results and Evaluation Plan</h1>
+<p>Repository code provides deterministic heuristics and telemetry acquisition. This paper includes an evaluation plan and metric definitions rather than asserted empirical measurements. For ResearchGate publication, replace illustrative examples with actual results collected using the outlined validation procedure.</p>
+<p>6.1 Evaluation metrics (definitions):</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Operational definition (testbed-based)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Detection accuracy</td>
+<td>Proportion of true suspicious events correctly flagged; proxy by labeled scenarios in testbed</td>
+</tr>
+<tr>
+<td>Precision</td>
+<td>Flagged alerts that are actually suspicious in ground truth</td>
+</tr>
+<tr>
+<td>Recall</td>
+<td>Ground-truth suspicious events that were successfully detected</td>
+</tr>
+<tr>
+<td>F1-score</td>
+<td>Harmonic mean of precision and recall</td>
+</tr>
+<tr>
+<td>Latency</td>
+<td>Time from input observation to alert generation or rule application</td>
+</tr>
+<tr>
+<td>Scan throughput</td>
+<td>Hosts scanned per minute under concurrency constraints</td>
+</tr>
+<tr>
+<td>Resource utilization</td>
+<td>CPU, memory, and network usage during monitoring/scanning</td>
+</tr>
+<tr>
+<td>False positive rate</td>
+<td>Alerts triggered by benign patterns</td>
+</tr>
+</tbody>
+</table>
+<h1 id="discussion">7. Discussion</h1>
+<p>The toolkit relies on OS-specific data sources and permission-sensitive commands (e.g., firewall rule enumeration). Heuristic detection components may produce false positives depending on environment-specific traffic and event-log noise. Mitigation includes tuning thresholds, adding allowlists, and collecting representative baseline telemetry.</p>
+<h1 id="limitations">8. Limitations</h1>
+<p>Several components require Administrator privileges. Network scanning behavior is constrained by network policies and host responsiveness. Site reputation scoring is heuristic and does not guarantee semantic correctness; it is intended for triage and prioritization.</p>
+<h1 id="conclusion">9. Conclusion</h1>
+<p>This paper documents a Windows security toolkit architecture combining endpoint monitoring, heuristic analytics, and controlled response actions, supported by tabulated module-to-capability mappings and flowchart workflows. Future work should add structured empirical evaluations with ground-truth datasets and refine scoring thresholds via statistically validated tuning.</p>
+<h1 id="references">10. References</h1>
+<p>Bejtlich, S. (2013). The practice of network security monitoring: Understanding incident detection and response. No Starch Press.</p>
+<p>Bace, R., &amp; Mell, P. (2001). NIST special publication on intrusion detection systems. National Institute of Standards and Technology.</p>
+<p>Kowalski, S. (2016). Endpoint detection and response: A practical guide. Apress.</p>
+<p>OWASP. (n.d.). Phishing. https://owasp.org/www-community/attacks/Phishing</p>
+<p>RFC 1918. (1996). Address allocation for private internets. Internet Engineering Task Force. https://www.rfc-editor.org/rfc/rfc1918</p>
+<p>Stallings, W. (2017). Cryptography and network security: Principles and practice. Pearson.</p>
+<p>NIST. (2012). A guide to the secure configuration of Windows systems. National Institute of Standards and Technology.</p>
+<p>NIST. (2018). Security and privacy controls for federal information systems and organizations (SP 800-53 Rev. 4). National Institute of Standards and Technology.</p>
+<h1 id="appendix-a.-rest-api-endpoint-summary">Appendix A. REST API Endpoint Summary</h1>
+<p>The endpoint summary is provided in Table 2. Replace with your implemented endpoint mappings once available.</p>
+<h1 id="appendix-b.-system-workflow-figures">Appendix B. System Workflow Figures</h1>
+<p>Figures 1–10 document the system workflows.</p>
+<h1 id="tables">Tables</h1>
+<h2 id="table-1.-component-inventory-and-responsibilities">Table 1. Component Inventory and Responsibilities</h2>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>Module</th>
+<th>Primary function</th>
+<th>Key data sources</th>
+<th>Main actions</th>
+<th>Representative outputs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GUI Dashboard (WPF)</td>
+<td>Tool orchestration and logging</td>
+<td>User selections; process execution</td>
+<td>Launch modules; manage RUN/STOP</td>
+<td>Console/log output; UI state</td>
+</tr>
+<tr>
+<td>FirewallWatcher</td>
+<td>Firewall rule baseline and change detection</td>
+<td>netsh advfirewall rules; IP Helper TCP table</td>
+<td>Detect new/removed rules; identify suspicious connections; block/unblock</td>
+<td>Change log; connection summaries; JSON export</td>
+</tr>
+<tr>
+<td>NetworkScanner</td>
+<td>Host discovery and TCP connect scanning</td>
+<td>ARP discovery; Ping sweep; TCP connect results; DNS; banner probes</td>
+<td>Acquire host/port state; OS heuristic; compute risks</td>
+<td>Scan results; HTML/CSV strings; risk summary objects</td>
+</tr>
+<tr>
+<td>BruteForceDetector</td>
+<td>Failed-logon and port-scan detection</td>
+<td>Windows EventLog (4625); TCP connection attempts</td>
+<td>Threshold-based alerting; auto-block via firewall rule</td>
+<td>Alert list; statistics; blocked IP tracking</td>
+</tr>
+<tr>
+<td>DeviceTracker</td>
+<td>ARP-based device inventory and change tracking</td>
+<td>ARP discovery; hostname resolution; WMI device queries</td>
+<td>Track devices by MAC; optional IMEI-related detection; arrival/departure events</td>
+<td>Device history and current list</td>
+</tr>
+<tr>
+<td>SiteReputation</td>
+<td>Heuristic URL safety scoring</td>
+<td>TLS handshake and certificate state; HTTP responses and content</td>
+<td>Compute domain/SSL/content scores; infer phishing/malicious indicators</td>
+<td>SiteScore object, grade, threats, headers</td>
+</tr>
+<tr>
+<td>VPNManager</td>
+<td>SSH-tunnel and SOCKS5-based traffic routing</td>
+<td>SSH client availability; TCP listener/connect; bidirectional relay</td>
+<td>Establish tunnel; validate connectivity; stop/cleanup</td>
+<td>Connection stats; traffic log</td>
+</tr>
+<tr>
+<td>AntiReverseEngineering</td>
+<td>Anti-debug and integrity checks</td>
+<td>Debugger presence; module/process environment</td>
+<td>Fail-fast on analysis indicators</td>
+<td>N/A (process termination on detection)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="table-2.-rest-api-endpoints-specification-summary">Table 2. REST API Endpoints (Specification Summary)</h2>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Capability group</th>
+<th>Input (summary)</th>
+<th>Output (summary)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>POST /api/vpn/connect</td>
+<td>VPN management</td>
+<td>host, port, username, password, localPort, vpnType</td>
+<td>success, currentMethod, duration</td>
+</tr>
+<tr>
+<td>GET /api/vpn/status</td>
+<td>VPN management</td>
+<td>— (API key/Bearer)</td>
+<td>isConnected, currentMethod, uptime</td>
+</tr>
+<tr>
+<td>POST /api/vpn/disconnect</td>
+<td>VPN management</td>
+<td>—</td>
+<td>success, message</td>
+</tr>
+<tr>
+<td>GET /api/vpn/methods</td>
+<td>VPN management</td>
+<td>—</td>
+<td>methods[] with priority</td>
+</tr>
+<tr>
+<td>POST /api/masking/enable</td>
+<td>Network masking</td>
+<td>—</td>
+<td>maskingEnabled=true; techniques_list</td>
+</tr>
+<tr>
+<td>POST /api/masking/disable</td>
+<td>Network masking</td>
+<td>—</td>
+<td>maskingEnabled=false</td>
+</tr>
+<tr>
+<td>GET /api/masking/status</td>
+<td>Network masking</td>
+<td>—</td>
+<td>technique states and anonymity level</td>
+</tr>
+<tr>
+<td>GET /api/masking/report</td>
+<td>Network masking</td>
+<td>format=text|json</td>
+<td>report text or JSON report</td>
+</tr>
+<tr>
+<td>POST /api/firewall/block-ip</td>
+<td>Firewall management</td>
+<td>ipAddress, direction, protocol</td>
+<td>success, ruleId</td>
+</tr>
+<tr>
+<td>POST /api/firewall/block-port</td>
+<td>Firewall management</td>
+<td>port, protocol, direction</td>
+<td>success, ruleId</td>
+</tr>
+<tr>
+<td>DELETE /api/firewall/block-ip/{ipAddress}</td>
+<td>Firewall management</td>
+<td>{ipAddress}</td>
+<td>success, message</td>
+</tr>
+<tr>
+<td>GET /api/firewall/rules</td>
+<td>Firewall management</td>
+<td>action, direction, enabled (optional)</td>
+<td>rules[], totalRules</td>
+</tr>
+<tr>
+<td>GET /api/firewall/connections</td>
+<td>Firewall/connection visibility</td>
+<td>state, processName (optional)</td>
+<td>connections[]</td>
+</tr>
+<tr>
+<td>GET /api/firewall/suspicious</td>
+<td>Firewall/connection analytics</td>
+<td>—</td>
+<td>suspiciousConnections[] and threatLevel</td>
+</tr>
+<tr>
+<td>POST /api/scanner/scan</td>
+<td>Network scanning</td>
+<td>cidr, startPort, endPort, timeout</td>
+<td>scanId, status</td>
+</tr>
+<tr>
+<td>GET /api/scanner/scan/{scanId}/status</td>
+<td>Network scanning</td>
+<td>scanId</td>
+<td>progress and counters</td>
+</tr>
+<tr>
+<td>GET /api/scanner/results/{scanId}</td>
+<td>Network scanning</td>
+<td>scanId</td>
+<td>results and host summaries</td>
+</tr>
+<tr>
+<td>POST /api/scanner/analyze</td>
+<td>Risk analysis</td>
+<td>scanId</td>
+<td>riskHosts[] and criticalVulnerabilities</td>
+</tr>
+<tr>
+<td>GET /api/scanner/report/{scanId}</td>
+<td>Reporting</td>
+<td>format=html|csv|json</td>
+<td>formatted report content</td>
+</tr>
+<tr>
+<td>GET /api/scanner/network-info</td>
+<td>Environment info</td>
+<td>—</td>
+<td>interfaces, gateways, dnsServers</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

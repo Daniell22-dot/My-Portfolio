@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10.1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>InventoryPOS - Database Schema</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../research.css" />
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">InventoryPOS - Database Schema</h1>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#inventorypos-database-schema-reference" id="toc-inventorypos-database-schema-reference">InventoryPOS — Database Schema Reference</a>
+<ul>
+<li><a href="#how-to-regenerate-the-ddl" id="toc-how-to-regenerate-the-ddl">How to regenerate the DDL</a></li>
+<li><a href="#conventions" id="toc-conventions">Conventions</a></li>
+<li><a href="#enumerations-persisted-as-integer" id="toc-enumerations-persisted-as-integer">Enumerations (persisted as INTEGER)</a></li>
+<li><a href="#tables" id="toc-tables">Tables</a>
+<ul>
+<li><a href="#tenancy-subscription" id="toc-tenancy-subscription">Tenancy &amp; subscription</a></li>
+<li><a href="#identity-access" id="toc-identity-access">Identity &amp; access</a></li>
+<li><a href="#catalogue" id="toc-catalogue">Catalogue</a></li>
+<li><a href="#sales-money" id="toc-sales-money">Sales &amp; money</a></li>
+<li><a href="#inventory-movement" id="toc-inventory-movement">Inventory movement</a></li>
+<li><a href="#sync" id="toc-sync">Sync</a></li>
+</ul></li>
+<li><a href="#foreign-keys-and-delete-behaviour" id="toc-foreign-keys-and-delete-behaviour">Foreign keys and delete behaviour</a></li>
+<li><a href="#indexes" id="toc-indexes">Indexes</a></li>
+<li><a href="#migration-history" id="toc-migration-history">Migration history</a></li>
+<li><a href="#encryption-at-rest" id="toc-encryption-at-rest">Encryption at rest</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="inventorypos-database-schema-reference">InventoryPOS — Database Schema Reference</h1>
+<blockquote>
+<p>Companion reference to <a href="inventorypos-project-documentation.html">InventoryPOS Project Documentation</a> (Chapter 3). The authoritative, machine-generated DDL for the SQLite provider lives next to this file at <a href="../inventorypos-schema.sql"><code>inventorypos-schema.sql</code></a>.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Engine</td>
+<td>SQLite (local-first) via EF Core 8</td>
+</tr>
+<tr>
+<td>Context</td>
+<td><code>InventoryPOS.Data.Context.AppDbContext</code></td>
+</tr>
+<tr>
+<td>Entities</td>
+<td><code>InventoryPOS.Core.Entities</code></td>
+</tr>
+<tr>
+<td>Configurations</td>
+<td><code>InventoryPOS.Data.Configurations</code></td>
+</tr>
+<tr>
+<td>Migrations</td>
+<td><code>InventoryPOS.Data.Migrations</code> (18 migrations)</td>
+</tr>
+<tr>
+<td>Optional encryption</td>
+<td>SQLCipher whole-database encryption (opt-in)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="how-to-regenerate-the-ddl">How to regenerate the DDL</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>dotnet ef dbcontext script `</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">-</span>p src\InventoryPOS<span class="op">.</span><span class="fu">Data</span>\InventoryPOS<span class="op">.</span><span class="fu">Data</span><span class="op">.</span><span class="fu">csproj</span> `</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">-</span>s src\InventoryPOS<span class="op">.</span><span class="fu">Data</span>\InventoryPOS<span class="op">.</span><span class="fu">Data</span><span class="op">.</span><span class="fu">csproj</span> `</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">-</span>o database\Migrations\Schema<span class="op">.</span><span class="fu">sql</span></span></code></pre></div>
+<p>To add a schema change:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>dotnet ef migrations add <span class="op">&lt;</span>Name<span class="op">&gt;</span> `</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">-</span>p src\InventoryPOS<span class="op">.</span><span class="fu">Data</span>\InventoryPOS<span class="op">.</span><span class="fu">Data</span><span class="op">.</span><span class="fu">csproj</span> `</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">-</span>s src\InventoryPOS<span class="op">.</span><span class="fu">Data</span>\InventoryPOS<span class="op">.</span><span class="fu">Data</span><span class="op">.</span><span class="fu">csproj</span></span></code></pre></div>
+<p>Migrations are applied automatically on startup by <code>DataService.InitializeAsync</code>.</p>
+<h2 id="conventions">Conventions</h2>
+<ul>
+<li><strong>Primary keys</strong> — every table has an <code>INTEGER</code> autoincrement <code>Id</code>.</li>
+<li><strong>Audit columns</strong> — every table derived from <code>BaseEntity</code> carries <code>CreatedAt</code>, <code>UpdatedAt</code> (ISO-8601 text) and <code>IsDeleted</code> (0/1).</li>
+<li><strong>Soft delete</strong> — nothing is physically deleted by the app. A global query filter excludes <code>IsDeleted = 1</code> from every <code>BaseEntity</code> query.</li>
+<li><strong>Tenancy</strong> — every business-owned table carries <code>BusinessId</code>. A global query filter restricts rows to the active tenant (<code>ITenantContext.BusinessId</code>), and is bypassed only when no tenant is active (seeding, sign-in) or explicitly via <code>IgnoreQueryFilters()</code>.</li>
+<li><strong>Enums</strong> are persisted as <code>INTEGER</code>; money values as <code>TEXT</code> with fixed precision (e.g. <code>(18,2)</code> or <code>(18,4)</code> for cost).</li>
+<li><strong>Quantities</strong> are <code>decimal</code> in the model and <code>REAL</code> in SQLite. The provider cannot aggregate, order, or compare <code>TEXT</code>-backed decimals, so a value converter stores physical units as <code>REAL</code>. This enables fractional/weighed units (<code>0.75 kg</code>) and keeps stock <code>SUM</code>/<code>ORDER BY</code> queries server-side.</li>
+<li><strong>Timestamps</strong> are stored as SQLite <code>TEXT</code> in ISO-8601 form.</li>
+</ul>
+<h2 id="enumerations-persisted-as-integer">Enumerations (persisted as INTEGER)</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Enum</th>
+<th>Members</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>UserRole</code></td>
+<td>Admin=1, Manager=2, Seller=3, Viewer=4</td>
+</tr>
+<tr>
+<td><code>SubscriptionPlan</code></td>
+<td>Free=1, Basic=2, Pro=3, Enterprise=4</td>
+</tr>
+<tr>
+<td><code>SaleStatus</code></td>
+<td>Pending=1, Completed=2, Cancelled=3, Refunded=4</td>
+</tr>
+<tr>
+<td><code>PaymentMethod</code></td>
+<td>Cash=1, Mpesa=2, Debtor=3, BankTransfer=4, Cheque=5</td>
+</tr>
+<tr>
+<td><code>PaymentStatus</code></td>
+<td>Pending=1, Completed=2, Failed=3, Refunded=4</td>
+</tr>
+<tr>
+<td><code>PurchaseOrderStatus</code></td>
+<td>Draft=1, Submitted=2, Approved=3, Received=4, Cancelled=5</td>
+</tr>
+<tr>
+<td><code>StockMovementType</code></td>
+<td>Opening=1, Sale=2, SaleCancelled=3, Refund=4, Purchase=5, Adjustment=6, TransferIn=7, TransferOut=8</td>
+</tr>
+<tr>
+<td><code>StockTransferStatus</code></td>
+<td>Pending=1, InTransit=2, Received=3, Cancelled=4</td>
+</tr>
+<tr>
+<td><code>ReservationStatus</code></td>
+<td>Active=1, Released=2, Consumed=3, Expired=4</td>
+</tr>
+<tr>
+<td><code>StkIntentStatus</code></td>
+<td>Queued=1, Pending=2, Processing=3, Complete=4, Failed=5</td>
+</tr>
+<tr>
+<td><code>SubscriptionPaymentStatus</code></td>
+<td>Pending=1, Processing=2, Paid=3, Activated=4, Failed=5</td>
+</tr>
+<tr>
+<td><code>StockStatus</code></td>
+<td>InStock=1, LowStock=2, OutOfStock=3</td>
+</tr>
+<tr>
+<td><code>AlertType</code></td>
+<td>LowStock=1, OutOfStock=2, Expiry=3</td>
+</tr>
+<tr>
+<td><code>ExpenseCategory</code></td>
+<td>Utilities=1, Rent=2, Salaries=3, Supplies=4, Marketing=5, Maintenance=6, Transportation=7, Insurance=8, Taxes=9, Other=10</td>
+</tr>
+<tr>
+<td><code>SyncStatus</code></td>
+<td>Pending=1, InProgress=2, Completed=3, Failed=4</td>
+</tr>
+<tr>
+<td><code>ReceiptType</code></td>
+<td>Sale=1, Refund=2, Payment=3</td>
+</tr>
+<tr>
+<td><code>TaxMode</code></td>
+<td>Exclusive=1, Inclusive=2</td>
+</tr>
+</tbody>
+</table>
+<h2 id="tables">Tables</h2>
+<h3 id="tenancy-subscription">Tenancy &amp; subscription</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Table</th>
+<th>Key columns</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Businesses</code></td>
+<td><code>Name</code>, <code>Email</code> (unique), <code>TaxId</code>, <code>CountryCode</code>, <code>SubscriptionPlan</code>, <code>SubscriptionExpiry</code>, <code>IsTrial</code>, <code>WrappedDataKey</code></td>
+<td>The tenant root. <code>WrappedDataKey</code> is the per-business AES-256-GCM data key.</td>
+</tr>
+<tr>
+<td><code>SubscriptionPayments</code></td>
+<td><code>BusinessId</code>, <code>Plan</code>, <code>Amount</code>, <code>InvoiceId</code>, <code>Status</code>, <code>CompletedAt</code></td>
+<td>M-Pesa subscription purchases. FK → <code>Businesses</code> (cascade).</td>
+</tr>
+<tr>
+<td><code>StkPaymentIntents</code></td>
+<td><code>BusinessId</code>, <code>SaleId</code>, <code>Amount</code>, <code>PhoneNumber</code>, <code>ApiRef</code> (unique), <code>InvoiceId</code>, <code>Status</code>, <code>Attempts</code></td>
+<td>Low-connectivity M-Pesa STK reconciliation.</td>
+</tr>
+<tr>
+<td><code>Branches</code></td>
+<td><code>Name</code>, <code>Code</code>, <code>BusinessId</code></td>
+<td>Shops belonging to a business. FK → <code>Businesses</code> (cascade).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="identity-access">Identity &amp; access</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Table</th>
+<th>Key columns</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Users</code></td>
+<td><code>Username</code>, <code>PasswordHash</code>, <code>Salt</code>, <code>Role</code>, <code>IsActive</code>, <code>LockoutEnd</code>, <code>PinHash</code>, <code>PinSalt</code>, <code>PinFailedAttempts</code>, <code>BusinessId</code>, <code>BranchId</code></td>
+<td>Password (PBKDF2) plus a separate shared-device switch PIN.</td>
+</tr>
+<tr>
+<td><code>AuditEntries</code></td>
+<td><code>BusinessId</code>, <code>BranchId</code>, <code>UserId</code>, <code>Action</code>, <code>EntityType</code>, <code>EntityId</code>, <code>OccurredAt</code>, <code>PreviousHash</code>, <code>Hash</code>, <code>Signature</code></td>
+<td>Append-only, hash-chained tamper-evident trail.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="catalogue">Catalogue</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Table</th>
+<th>Key columns</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Products</code></td>
+<td><code>Barcode</code>+<code>BusinessId</code> (unique), <code>Name</code>, <code>PurchasePrice</code>, <code>AverageCost</code>, <code>SellingPrice</code>, <code>StockQuantity</code>, <code>MinimumStockLevel</code>, <code>LeadTimeDays</code>, <code>TaxRate</code>, <code>UnitOfMeasure</code>, <code>TracksBatches</code>, <code>TracksSerialNumbers</code>, <code>IsService</code>, <code>SupplierId</code>, <code>CategoryId</code></td>
+<td><code>AverageCost</code> = weighted-average cost; <code>LeadTimeDays</code> feeds reorder suggestions; stock is always held in the product’s base unit.</td>
+</tr>
+<tr>
+<td><code>ProductUnits</code></td>
+<td><code>ProductId</code>, <code>BusinessId</code>, <code>Name</code>, <code>Barcode</code>, <code>Factor</code>, <code>SellingPrice</code>, <code>IsBaseUnit</code>, <code>IsPurchaseUnit</code>, <code>IsSellingUnit</code></td>
+<td>Pack sizes sold/bought as multiples of the base unit (e.g. carton = 24 each). Indexed by <code>(BusinessId, Barcode)</code>. FK → <code>Products</code> (cascade).</td>
+</tr>
+<tr>
+<td><code>ProductBatches</code></td>
+<td><code>ProductId</code>, <code>BusinessId</code>, <code>BatchNumber</code>, <code>ManufacturedDate</code>, <code>ExpiryDate</code>, <code>QuantityReceived</code>, <code>QuantityRemaining</code>, <code>UnitCost</code>, <code>SupplierId</code></td>
+<td>Lot/batch tracking with FEFO draw-down. Indexed by <code>(BusinessId, ProductId, ExpiryDate)</code>. FK → <code>Products</code> (cascade).</td>
+</tr>
+<tr>
+<td><code>ProductSerials</code></td>
+<td><code>ProductId</code>, <code>BusinessId</code>, <code>ProductBatchId</code>, <code>SerialNumber</code>, <code>Status</code>, <code>ReceivedAt</code>, <code>SoldAt</code>, <code>SaleId</code>, <code>SaleItemId</code></td>
+<td>One row per serialised unit. Indexed by <code>(BusinessId, SerialNumber)</code>. FK → <code>Products</code> (cascade), → <code>ProductBatches</code> (set null).</td>
+</tr>
+<tr>
+<td><code>PriceLists</code></td>
+<td><code>BusinessId</code>, <code>Name</code>, <code>Description</code>, <code>IsDefault</code>, <code>IsActive</code></td>
+<td>Named price sets. One default per business, enforced on save.</td>
+</tr>
+<tr>
+<td><code>PriceListItems</code></td>
+<td><code>PriceListId</code>, <code>BusinessId</code>, <code>ProductId</code>, <code>MinQuantity</code>, <code>UnitPrice</code></td>
+<td>Tiered price per base unit, applying from <code>MinQuantity</code> up. Indexed by <code>(BusinessId, PriceListId, ProductId)</code>. FK → <code>PriceLists</code> (cascade), → <code>Products</code> (cascade).</td>
+</tr>
+<tr>
+<td><code>Categories</code></td>
+<td><code>Name</code>, <code>BusinessId</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Suppliers</code></td>
+<td><code>Name</code>, <code>ContactPerson</code>, <code>TaxId</code>, <code>BusinessId</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>InventoryStocks</code></td>
+<td><code>ProductId</code>, <code>Quantity</code>, <code>Location</code>, <code>BranchId</code></td>
+<td>Per-location stock.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sales-money">Sales &amp; money</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Table</th>
+<th>Key columns</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Sales</code></td>
+<td><code>InvoiceNumber</code> (unique), <code>ReceiptNumber</code> (unique), <code>SaleDate</code>, <code>SubTotal</code>, <code>DiscountAmount</code>, <code>TaxAmount</code>, <code>RoundingAdjustment</code>, <code>TotalAmount</code>, <code>AmountPaid</code>, <code>ChangeDue</code>, <code>PaymentMethod</code>, <code>Status</code>, <code>IsSynced</code>, <code>FiscalReceiptNumber</code>, <code>FiscalSignature</code>, <code>FiscalStatus</code>, <code>CustomerId</code>, <code>BranchId</code></td>
+<td><code>RoundingAdjustment</code> is the signed cash-rounding delta. Fiscal columns hold the e-invoice result.</td>
+</tr>
+<tr>
+<td><code>SaleItems</code></td>
+<td><code>SaleId</code>, <code>ProductId</code>, <code>ProductName</code>, <code>Quantity</code>, <code>UnitPrice</code>, <code>UnitName</code>, <code>UnitFactor</code>, <code>UnitQuantity</code>, <code>CostPrice</code>, <code>DiscountAmount</code>, <code>TaxAmount</code>, <code>Subtotal</code>, <code>Total</code></td>
+<td><code>Quantity</code> is in base stock units; <code>UnitQuantity</code>/<code>UnitName</code>/<code>UnitFactor</code> record the pack size sold. <code>CostPrice</code> snapshots cost for margin reporting. FK → <code>Sales</code> (cascade).</td>
+</tr>
+<tr>
+<td><code>Payments</code></td>
+<td><code>SaleId</code>, <code>CustomerId</code>, <code>Amount</code>, <code>Method</code>, <code>Status</code>, <code>TransactionReference</code>, <code>PaymentReference</code></td>
+<td>Split tender and customer settlement.</td>
+</tr>
+<tr>
+<td><code>Expenses</code></td>
+<td><code>Description</code>, <code>Amount</code>, <code>ExpenseDate</code>, <code>Category</code>, <code>BranchId</code>, <code>UserId</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="inventory-movement">Inventory movement</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Table</th>
+<th>Key columns</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>StockMovements</code></td>
+<td><code>ProductId</code>, <code>QuantityChange</code>, <code>QuantityAfter</code>, <code>MovementType</code>, <code>Reference</code>, <code>Reason</code>, <code>PerformedBy</code>, <code>BranchId</code></td>
+<td>Immutable stock ledger. Indexed by <code>(ProductId, CreatedAt)</code> and <code>(BusinessId, CreatedAt)</code>.</td>
+</tr>
+<tr>
+<td><code>StockAlerts</code></td>
+<td><code>ProductId</code>, <code>CurrentStock</code>, <code>ThresholdLevel</code>, <code>Type</code>, <code>IsAcknowledged</code></td>
+<td>Low-stock / out-of-stock alerts.</td>
+</tr>
+<tr>
+<td><code>StockTransfers</code></td>
+<td><code>Reference</code>, <code>FromBranchId</code>, <code>ToBranchId</code>, <code>Status</code>, <code>DispatchedAt</code>, <code>ReceivedAt</code></td>
+<td>Inter-branch transfers.</td>
+</tr>
+<tr>
+<td><code>StockTransferItems</code></td>
+<td><code>StockTransferId</code>, <code>ProductId</code>, <code>Quantity</code>, <code>ReceivedQuantity</code></td>
+<td>FK → <code>StockTransfers</code> (cascade).</td>
+</tr>
+<tr>
+<td><code>StockReservations</code></td>
+<td><code>ProductId</code>, <code>Quantity</code>, <code>Reference</code>, <code>Status</code>, <code>ExpiresAt</code>, <code>BranchId</code></td>
+<td>TTL holds shared across channels. Indexed by <code>(BusinessId, Status, ExpiresAt)</code>.</td>
+</tr>
+<tr>
+<td><code>PurchaseOrders</code></td>
+<td><code>OrderNumber</code>, <code>SupplierId</code>, <code>Status</code>, <code>SubTotal</code>, <code>TaxAmount</code>, <code>ShippingCost</code>, <code>TotalAmount</code>, <code>DeliveryDate</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>PurchaseOrderItems</code></td>
+<td><code>PurchaseOrderId</code>, <code>ProductId</code>, <code>Quantity</code>, <code>UnitPrice</code>, <code>ReceivedQuantity</code></td>
+<td>FK → <code>PurchaseOrders</code> (cascade).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sync">Sync</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Table</th>
+<th>Key columns</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SyncLogs</code></td>
+<td><code>EntityType</code>, <code>EntityId</code>, <code>Status</code>, <code>Action</code>, <code>ErrorMessage</code>, <code>SyncedAt</code></td>
+<td>Outbox/sync audit.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="foreign-keys-and-delete-behaviour">Foreign keys and delete behaviour</h2>
+<p>Most tenant-owned FKs use <code>Cascade</code> or <code>Restrict</code> to protect data integrity:</p>
+<ul>
+<li><code>Cascade</code> — child rows belonging to a parent: <code>Branches</code>, <code>Categories</code>, <code>Suppliers</code>, <code>Customers</code>, <code>SubscriptionPayments</code>, <code>SaleItems</code>, <code>PurchaseOrderItems</code>, <code>StockTransferItems</code>, <code>StockMovements</code>, <code>StockAlerts</code>.</li>
+<li><code>Restrict</code> — references that must not silently remove history: <code>Sales.BusinessId</code>, <code>Products.BusinessId</code>, <code>Payments.SaleId</code>, <code>StockMovements.ProductId</code>, <code>StockReservations</code>, <code>AuditEntries</code>, <code>StkPaymentIntents</code>.</li>
+<li><code>SetNull</code> — optional references: <code>*.BranchId</code>, <code>Sales.CustomerId</code>, <code>Products.SupplierId</code>/<code>CategoryId</code>, <code>Users.BranchId</code>.</li>
+</ul>
+<h2 id="indexes">Indexes</h2>
+<p>Highlighted indexes:</p>
+<ul>
+<li>Unique: <code>Businesses.Email</code>, <code>Products(Barcode, BusinessId)</code>, <code>Sales.InvoiceNumber</code>, <code>Sales.ReceiptNumber</code>, <code>StkPaymentIntents.ApiRef</code>.</li>
+<li>Composite/hot-path: <code>StockMovements(ProductId, CreatedAt)</code>, <code>StockMovements(BusinessId, CreatedAt)</code>, <code>AuditEntries(BusinessId, Id)</code>, <code>AuditEntries(BusinessId, OccurredAt)</code>, <code>StockReservations(BusinessId, Status, ExpiresAt)</code>, <code>StockReservations(BusinessId, Reference)</code>, <code>StkPaymentIntents(BusinessId, Status)</code>.</li>
+</ul>
+<p>The full, exact list is in <a href="../inventorypos-schema.sql"><code>Schema.sql</code></a>.</p>
+<h2 id="migration-history">Migration history</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>Migration</th>
+<th>Adds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>InitialCreate</code></td>
+<td>Core entities</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>AddMultiTenancyAndSubscriptions</code></td>
+<td>Tenancy + subscription fields</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>AddSubscriptionPayments</code></td>
+<td><code>SubscriptionPayments</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>AddStockMovements</code></td>
+<td>Stock ledger</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>AddSaleItemCostPrice</code></td>
+<td><code>SaleItems.CostPrice</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>AddStockTransfers</code></td>
+<td>Transfers</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>AddFiscalReceiptFields</code></td>
+<td>Fiscal columns on <code>Sales</code></td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>AddSaleRoundingAdjustment</code></td>
+<td><code>Sales.RoundingAdjustment</code></td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>AddProductAverageCost</code></td>
+<td><code>Products.AverageCost</code></td>
+</tr>
+<tr>
+<td>10</td>
+<td><code>AddProductLeadTimeDays</code></td>
+<td><code>Products.LeadTimeDays</code></td>
+</tr>
+<tr>
+<td>11</td>
+<td><code>AddStockReservations</code></td>
+<td><code>StockReservations</code></td>
+</tr>
+<tr>
+<td>12</td>
+<td><code>AddStkPaymentIntents</code></td>
+<td><code>StkPaymentIntents</code></td>
+</tr>
+<tr>
+<td>13</td>
+<td><code>AddAuditTrailAndSharedDeviceSecurity</code></td>
+<td><code>AuditEntries</code> + user PIN columns</td>
+</tr>
+<tr>
+<td>14</td>
+<td><code>AddBusinessCountryCode</code></td>
+<td><code>Businesses.CountryCode</code></td>
+</tr>
+<tr>
+<td>15</td>
+<td><code>ConvertQuantitiesToDecimal</code></td>
+<td>All quantity columns <code>INTEGER</code> → <code>REAL</code> (fractional units)</td>
+</tr>
+<tr>
+<td>16</td>
+<td><code>AddProductUnits</code></td>
+<td><code>ProductUnits</code> table + sale-line unit columns</td>
+</tr>
+<tr>
+<td>17</td>
+<td><code>AddBatchAndSerialTracking</code></td>
+<td><code>ProductBatches</code> + <code>ProductSerials</code> tables and product tracking flags</td>
+</tr>
+<tr>
+<td>18</td>
+<td><code>AddPriceLists</code></td>
+<td><code>PriceLists</code> + <code>PriceListItems</code> tables and <code>Customers.PriceListId</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="encryption-at-rest">Encryption at rest</h2>
+<p>Whole-database encryption (SQLCipher) is <strong>opt-in</strong> and off by default. When enabled, the passphrase is kept in <code>SecureStorage</code> (key <code>DatabasePassphrase</code>) and an existing plaintext database is migrated in place using <code>ATTACH DATABASE … KEY</code> followed by <code>sqlcipher_export</code>. Enabling or disabling requires an application restart. See <code>DatabaseEncryptionService</code>.</p>
+</body>
+</html>

@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10.1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>InventoryPOS - Project Documentation</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="../research.css" />
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">InventoryPOS - Project Documentation</h1>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#table-of-contents" id="toc-table-of-contents">Table of Contents</a></li>
+<li><a href="#inventorypos-technical-functional-project-documentation" id="toc-inventorypos-technical-functional-project-documentation">InventoryPOS Technical &amp; Functional Project Documentation</a>
+<ul>
+<li><a href="#document-control" id="toc-document-control">Document control</a></li>
+</ul></li>
+<li><a href="#chapter-1-introduction-vision-and-scope" id="toc-chapter-1-introduction-vision-and-scope">Chapter 1 Introduction, Vision and Scope</a>
+<ul>
+<li><a href="#what-inventorypos-is" id="toc-what-inventorypos-is">1.1 What InventoryPOS is</a></li>
+<li><a href="#the-problem-it-solves" id="toc-the-problem-it-solves">1.2 The problem it solves</a></li>
+<li><a href="#goals-and-non-goals" id="toc-goals-and-non-goals">1.3 Goals and non-goals</a></li>
+<li><a href="#users-and-roles" id="toc-users-and-roles">1.4 Users and roles</a></li>
+<li><a href="#functional-feature-catalogue" id="toc-functional-feature-catalogue">1.5 Functional feature catalogue</a></li>
+<li><a href="#non-functional-characteristics" id="toc-non-functional-characteristics">1.6 Non-functional characteristics</a></li>
+<li><a href="#technology-stack" id="toc-technology-stack">1.7 Technology stack</a></li>
+<li><a href="#system-context" id="toc-system-context">1.8 System context</a></li>
+<li><a href="#subscription-plans" id="toc-subscription-plans">1.9 Subscription plans</a></li>
+</ul></li>
+<li><a href="#chapter-2-system-architecture" id="toc-chapter-2-system-architecture">Chapter 2 System Architecture</a>
+<ul>
+<li><a href="#architectural-style" id="toc-architectural-style">2.1 Architectural style</a></li>
+<li><a href="#solution-and-project-structure" id="toc-solution-and-project-structure">2.2 Solution and project structure</a></li>
+<li><a href="#section" id="toc-section"></a></li>
+<li><a href="#section-1" id="toc-section-1"></a></li>
+<li><a href="#section-2" id="toc-section-2"></a></li>
+<li><a href="#section-3" id="toc-section-3"></a></li>
+<li><a href="#section-4" id="toc-section-4"></a></li>
+<li><a href="#section-5" id="toc-section-5"></a></li>
+<li><a href="#section-6" id="toc-section-6"></a></li>
+<li><a href="#section-7" id="toc-section-7"></a></li>
+<li><a href="#section-8" id="toc-section-8"></a></li>
+<li><a href="#section-9" id="toc-section-9"></a></li>
+<li><a href="#section-10" id="toc-section-10"></a></li>
+<li><a href="#section-11" id="toc-section-11"></a></li>
+<li><a href="#layered-architecturediagram-03-diagram-03" id="toc-layered-architecturediagram-03-diagram-03">2.3 Layered architecture<img src="media/inventorypos-project-documentation/media/image3.png" style="width:6.75in;height:7.9375in" alt="Diagram 03" />-Diagram 03</a></li>
+<li><a href="#deployment-view" id="toc-deployment-view">2.4 Deployment view</a></li>
+<li><a href="#dependency-injection-composition-root" id="toc-dependency-injection-composition-root">2.5 Dependency injection composition root</a></li>
+<li><a href="#application-startup-sequence" id="toc-application-startup-sequence">2.6 Application startup sequence</a></li>
+<li><a href="#requestresponse-flow-through-the-layers" id="toc-requestresponse-flow-through-the-layers">2.7 Request/response flow through the layers</a></li>
+<li><a href="#configuration-and-options-providers" id="toc-configuration-and-options-providers">2.8 Configuration and options providers</a></li>
+</ul></li>
+<li><a href="#chapter-3-data-model-and-persistence" id="toc-chapter-3-data-model-and-persistence">Chapter 3 Data Model and Persistence</a>
+<ul>
+<li><a href="#overview" id="toc-overview">3.1 Overview</a></li>
+<li><a href="#entity-relationship-model" id="toc-entity-relationship-model">3.2 Entity-relationship model</a></li>
+<li><a href="#tenancy-and-soft-delete-strategies" id="toc-tenancy-and-soft-delete-strategies">3.3 Tenancy and soft-delete strategies</a></li>
+<li><a href="#migrations" id="toc-migrations">3.4 Migrations</a></li>
+<li><a href="#repository-pattern" id="toc-repository-pattern">3.5 Repository pattern</a></li>
+<li><a href="#encryption-at-rest" id="toc-encryption-at-rest">3.6 Encryption at rest</a>
+<ul>
+<li><a href="#field-level-encryption-always-available" id="toc-field-level-encryption-always-available">3.6.1 Field-level encryption (always available)</a></li>
+<li><a href="#whole-database-encryption-sqlcipher-opt-in" id="toc-whole-database-encryption-sqlcipher-opt-in">3.6.2 Whole-database encryption (SQLCipher, opt-in)</a></li>
+</ul></li>
+<li><a href="#seed-data" id="toc-seed-data">3.7 Seed data</a></li>
+</ul></li>
+<li><a href="#chapter-4-functional-modules-and-application-services" id="toc-chapter-4-functional-modules-and-application-services">Chapter 4 Functional Modules and Application Services</a>
+<ul>
+<li><a href="#authentication-and-authorisation" id="toc-authentication-and-authorisation">4.1 Authentication and authorisation</a></li>
+<li><a href="#point-of-sale-and-the-sales-lifecycle" id="toc-point-of-sale-and-the-sales-lifecycle">4.2 Point of Sale and the sales lifecycle</a></li>
+<li><a href="#inventory-and-the-stock-ledger" id="toc-inventory-and-the-stock-ledger">4.3 Inventory and the stock ledger</a></li>
+<li><a href="#branch-stock-transfers" id="toc-branch-stock-transfers">4.4 Branch stock transfers</a></li>
+<li><a href="#products-customers-suppliers-and-purchase-orders" id="toc-products-customers-suppliers-and-purchase-orders">4.5 Products, customers, suppliers and purchase orders</a></li>
+<li><a href="#reporting" id="toc-reporting">4.6 Reporting</a></li>
+<li><a href="#subscriptions-and-m-pesa-billing" id="toc-subscriptions-and-m-pesa-billing">4.7 Subscriptions and M-Pesa billing</a></li>
+<li><a href="#offline-sync-outbox" id="toc-offline-sync-outbox">4.8 Offline sync (outbox)</a></li>
+<li><a href="#kra-etims-fiscalisation" id="toc-kra-etims-fiscalisation">4.9 KRA eTIMS fiscalisation</a></li>
+<li><a href="#printing" id="toc-printing">4.10 Printing</a></li>
+<li><a href="#navigation-and-screens" id="toc-navigation-and-screens">4.11 Navigation and screens</a></li>
+</ul></li>
+<li><a href="#chapter-5-security-quality-operations-and-roadmap" id="toc-chapter-5-security-quality-operations-and-roadmap">Chapter 5 Security, Quality, Operations and Roadmap</a>
+<ul>
+<li><a href="#security-model" id="toc-security-model">5.1 Security model</a></li>
+<li><a href="#testing-strategy-and-current-coverage" id="toc-testing-strategy-and-current-coverage">5.2 Testing strategy and current coverage</a></li>
+<li><a href="#build-run-and-deployment" id="toc-build-run-and-deployment">5.3 Build, run and deployment</a></li>
+<li><a href="#operations" id="toc-operations">5.4 Operations</a></li>
+<li><a href="#known-limitations-and-placeholders" id="toc-known-limitations-and-placeholders">5.5 Known limitations and placeholders</a></li>
+<li><a href="#roadmap" id="toc-roadmap">5.6 Roadmap</a></li>
+<li><a href="#glossary" id="toc-glossary">5.7 Glossary</a></li>
+<li><a href="#appendix-a-repository-tree" id="toc-appendix-a-repository-tree">5.8 Appendix A Repository tree</a></li>
+<li><a href="#appendix-b-key-package-versions" id="toc-appendix-b-key-package-versions">5.9 Appendix B Key package versions</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 class="TOC-Heading" id="table-of-contents">Table of Contents</h1>
+<p><a href="#X22f5c83743bdd4bcb6d85eb5f37584940f2f88f">InventoryPOS Technical &amp; Functional Project Documentation <span>3</span></a></p>
+<p><a href="#document-control">Document control <span>3</span></a></p>
+<p><a href="#chapter-1-introduction-vision-and-scope">Chapter 1 Introduction, Vision and Scope <span>3</span></a></p>
+<p><a href="#what-inventorypos-is">1.1 What InventoryPOS is <span>3</span></a></p>
+<p><a href="#the-problem-it-solves">1.2 The problem it solves <span>4</span></a></p>
+<p><a href="#goals-and-non-goals">1.3 Goals and non-goals <span>4</span></a></p>
+<p><a href="#users-and-roles">1.4 Users and roles <span>5</span></a></p>
+<p><a href="#functional-feature-catalogue">1.5 Functional feature catalogue <span>5</span></a></p>
+<p><a href="#non-functional-characteristics">1.6 Non-functional characteristics <span>6</span></a></p>
+<p><a href="#technology-stack">1.7 Technology stack <span>6</span></a></p>
+<p><a href="#system-context">1.8 System context <span>6</span></a></p>
+<p><a href="#subscription-plans">1.9 Subscription plans <span>7</span></a></p>
+<p><a href="#chapter-2-system-architecture">Chapter 2 System Architecture <span>8</span></a></p>
+<p><a href="#architectural-style">2.1 Architectural style <span>8</span></a></p>
+<p><a href="#solution-and-project-structure">2.2 Solution and project structure <span>8</span></a></p>
+<p><a href="#section">2.3 Layered architecture <span>9</span></a></p>
+<p><a href="#deployment-view">2.4 Deployment view <span>11</span></a></p>
+<p><a href="#dependency-injection-composition-root">2.5 Dependency injection composition root <span>11</span></a></p>
+<p><a href="#application-startup-sequence">2.6 Application startup sequence <span>12</span></a></p>
+<p><a href="#requestresponse-flow-through-the-layers">2.7 Request/response flow through the layers <span>13</span></a></p>
+<p><a href="#configuration-and-options-providers">2.8 Configuration and options providers <span>13</span></a></p>
+<p><a href="#chapter-3-data-model-and-persistence">Chapter 3 Data Model and Persistence <span>13</span></a></p>
+<p><a href="#overview">3.1 Overview <span>13</span></a></p>
+<p><a href="#entity-relationship-model">3.2 Entity-relationship model <span>14</span></a></p>
+<p><a href="#tenancy-and-soft-delete-strategies">3.3 Tenancy and soft-delete strategies <span>14</span></a></p>
+<p><a href="#migrations">3.4 Migrations <span>16</span></a></p>
+<p><a href="#repository-pattern">3.5 Repository pattern <span>16</span></a></p>
+<p><a href="#encryption-at-rest">3.6 Encryption at rest <span>16</span></a></p>
+<p><a href="#field-level-encryption-always-available">3.6.1 Field-level encryption (always available) <span>17</span></a></p>
+<p><a href="#whole-database-encryption-sqlcipher-opt-in">3.6.2 Whole-database encryption (SQLCipher, opt-in) <span>17</span></a></p>
+<p><a href="#seed-data">3.7 Seed data <span>18</span></a></p>
+<p><a href="#chapter-4-functional-modules-and-application-services">Chapter 4 Functional Modules and Application Services <span>18</span></a></p>
+<p><a href="#authentication-and-authorisation">4.1 Authentication and authorisation <span>19</span></a></p>
+<p><a href="#point-of-sale-and-the-sales-lifecycle">4.2 Point of Sale and the sales lifecycle <span>20</span></a></p>
+<p><a href="#inventory-and-the-stock-ledger">4.3 Inventory and the stock ledger <span>21</span></a></p>
+<p><a href="#branch-stock-transfers">4.4 Branch stock transfers <span>21</span></a></p>
+<p><a href="#products-customers-suppliers-and-purchase-orders">4.5 Products, customers, suppliers and purchase orders <span>22</span></a></p>
+<p><a href="#reporting">4.6 Reporting <span>23</span></a></p>
+<p><a href="#subscriptions-and-m-pesa-billing">4.7 Subscriptions and M-Pesa billing <span>23</span></a></p>
+<p><a href="#offline-sync-outbox">4.8 Offline sync (outbox) <span>24</span></a></p>
+<p><a href="#kra-etims-fiscalisation">4.9 KRA eTIMS fiscalisation <span>24</span></a></p>
+<p><a href="#printing">4.10 Printing <span>25</span></a></p>
+<p><a href="#navigation-and-screens">4.11 Navigation and screens <span>25</span></a></p>
+<p><a href="#chapter-5-security-quality-operations-and-roadmap">Chapter 5 Security, Quality, Operations and Roadmap <span>25</span></a></p>
+<p><a href="#security-model">5.1 Security model <span>25</span></a></p>
+<p><a href="#testing-strategy-and-current-coverage">5.2 Testing strategy and current coverage <span>26</span></a></p>
+<p><a href="#build-run-and-deployment">5.3 Build, run and deployment <span>27</span></a></p>
+<p><a href="#operations">5.4 Operations <span>27</span></a></p>
+<p><a href="#known-limitations-and-placeholders">5.5 Known limitations and placeholders <span>27</span></a></p>
+<p><a href="#roadmap">5.6 Roadmap <span>28</span></a></p>
+<p><a href="#glossary">5.7 Glossary <span>28</span></a></p>
+<p><a href="#appendix-a-repository-tree">5.8 Appendix A Repository tree <span>28</span></a></p>
+<p><a href="#appendix-b-key-package-versions">5.9 Appendix B Key package versions <span>29</span></a></p>
+<p><span id="X22f5c83743bdd4bcb6d85eb5f37584940f2f88f" class="anchor"></span></p>
+<h1 id="inventorypos-technical-functional-project-documentation">InventoryPOS Technical &amp; Functional Project Documentation</h1>
+<p><strong>A multi-tenant Point-of-Sale and Inventory Management platform for Kenyan SMEs</strong></p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Document title</td>
+<td>InventoryPOS Technical &amp; Functional Project Documentation</td>
+</tr>
+<tr>
+<td>Version</td>
+<td>1.0</td>
+</tr>
+<tr>
+<td>Date</td>
+<td>17 October 2026</td>
+</tr>
+<tr>
+<td>Author</td>
+<td>Daniel Manyasa</td>
+</tr>
+<tr>
+<td>Repository</td>
+<td><code>D:\InventoryPOS</code></td>
+</tr>
+<tr>
+<td>Primary branch</td>
+<td><code>main</code></td>
+</tr>
+<tr>
+<td>Solution</td>
+<td><code>InventoryPOS.sln</code> (5 projects)</td>
+</tr>
+<tr>
+<td>Framework</td>
+<td>.NET 8 / .NET MAUI</td>
+</tr>
+<tr>
+<td>License</td>
+<td>MIT</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>This document is the authoritative description of the InventoryPOS system. It is written in Markdown so that diagrams render on GitHub and in editors, and it is exported to Microsoft Word (<code>.docx</code>) by <code>scripts/export-docs.ps1</code>, which renders every Mermaid diagram to a PNG so that the diagrams remain visible in Word.</p>
+</blockquote>
+<hr />
+<h2 id="document-control">Document control</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Rev</th>
+<th>Date</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.0</td>
+<td>2026-10-17</td>
+<td>Initial consolidated documentation covering all 5 chapters.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="chapter-1-introduction-vision-and-scope">Chapter 1 Introduction, Vision and Scope</h1>
+<h2 id="what-inventorypos-is">1.1 What InventoryPOS is</h2>
+<p>InventoryPOS is a <strong>cross-platform Point-of-Sale (POS) and inventory management application</strong> built on <strong>.NET 8 MAUI</strong>. A single codebase produces native apps for <strong>Android, iOS, Mac Catalyst and Windows desktop</strong>. Each installation is a complete, self-contained “till”: it sells products, tracks stock in real time, manages customers, suppliers, purchase orders and branches, prints receipts, and keeps working when the network drops.</p>
+<p>The product is deliberately designed to be <strong>monetisable</strong>: every business that signs up is treated as a <strong>tenant</strong>, self-registers for a <strong>14-day free trial</strong>, and can pay a <strong>monthly subscription</strong> in Kenyan Shillings using <strong>M-Pesa</strong> (through IntaSend). Subscription plans gate how many users, branches and products a tenant may create.</p>
+<h2 id="the-problem-it-solves">1.2 The problem it solves</h2>
+<p>Small and medium retailers in Kenya typically face a set of concrete operational problems that this system addresses head-on:</p>
+<ul>
+<li><strong>Stock and cash drift.</strong> Sales on paper or in spreadsheets do not reconcile with what is physically on the shelf or in the till. InventoryPOS records every quantity change in an immutable <strong>stock ledger</strong> and captures a <strong>Z-report</strong> for cash reconciliation.</li>
+<li><strong>No fiscal compliance.</strong> Kenyan businesses must issue receipts through <strong>KRA eTIMS</strong>. InventoryPOS submits each sale for a <strong>fiscal receipt</strong> and stores the fiscal number and signature on the sale.</li>
+<li><strong>Unreliable connectivity.</strong> Shops often operate with intermittent internet. The app is <strong>offline-first</strong>: sales are written to the local database and pushed to a backup server later by an <strong>outbox</strong>.</li>
+<li><strong>Data theft on shared/lost devices.</strong> Tills are shared and devices get lost. The system protects data with <strong>AES-256-GCM field encryption</strong> and optional <strong>SQLCipher whole-database encryption</strong>.</li>
+<li><strong>Affordability.</strong> Traditional POS suites are expensive and require specialist hardware. InventoryPOS runs on phones and cheap Windows machines and offers a free tier.</li>
+</ul>
+<h2 id="goals-and-non-goals">1.3 Goals and non-goals</h2>
+<p><strong>Goals</strong></p>
+<ul>
+<li>One codebase, four platforms (Android, iOS, Mac Catalyst, Windows).</li>
+<li>Local-first operation with a clear, testable synchronisation path to a backend.</li>
+<li>Strong tenant isolation so a shared device can never leak one business’s data to another.</li>
+<li>Configurable external integrations (payments, fiscalisation, cloud backup) that are <strong>off by default</strong> and enabled per business.</li>
+<li>A monetisation model (plans, limits, trials, renewals) built into the domain.</li>
+</ul>
+<p><strong>Non-goals (this release)</strong></p>
+<ul>
+<li>A hosted backend is not included. The app talks to a plain HTTP endpoint (<code>POST /api/sales/sync</code>) but the server side is the adopter’s responsibility.</li>
+<li>The eTIMS integration targets a configurable VSCU endpoint; exact field/rate codes vary by device firmware and may need tuning against a live sandbox.</li>
+<li>Reports are CSV exports; PDF/Excel generators exist as placeholders only.</li>
+</ul>
+<h2 id="users-and-roles">1.4 Users and roles</h2>
+<p>The system models four roles, ordered by privilege. Authorisation is evaluated by numeric comparison (<code>currentRole &lt;= requiredRole</code>), so a lower enum value implies more privilege.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Role</th>
+<th>Enum</th>
+<th>Can do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Admin</strong></td>
+<td>1</td>
+<td>Everything: manage users, branches, subscription, settings, payments, activations</td>
+</tr>
+<tr>
+<td><strong>Manager</strong></td>
+<td>2</td>
+<td>Products, sales, cancel sales, delete products, move stock between branches</td>
+</tr>
+<tr>
+<td><strong>Seller</strong></td>
+<td>3</td>
+<td>Create sales and products</td>
+</tr>
+<tr>
+<td><strong>Viewer</strong></td>
+<td>4</td>
+<td>Read-only access</td>
+</tr>
+</tbody>
+</table>
+<h2 id="functional-feature-catalogue">1.5 Functional feature catalogue</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Area</th>
+<th>Capabilities</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Tenancy &amp; onboarding</strong></td>
+<td>Owner self-registration, 14-day free trial, default branch/categories, per-tenant data isolation</td>
+</tr>
+<tr>
+<td><strong>Authentication</strong></td>
+<td>Username/password, PBKDF2 hashing, forced password change, account lockout, session timeout</td>
+</tr>
+<tr>
+<td><strong>POS</strong></td>
+<td>Product search, cart, discounts, tax, <strong>split payments</strong>, held sales, debtor credit, receipt printing</td>
+</tr>
+<tr>
+<td><strong>Products</strong></td>
+<td>CRUD, barcodes, categories, pricing, tax rate, service items, units of measure</td>
+</tr>
+<tr>
+<td><strong>Inventory</strong></td>
+<td>Stock levels, adjustments, immutable stock-movement ledger, low-stock/out-of-stock alerts</td>
+</tr>
+<tr>
+<td><strong>Branch transfers</strong></td>
+<td>Request â†’ dispatch â†’ receive â†’ cancel workflow with stock custody rules</td>
+</tr>
+<tr>
+<td><strong>Sales</strong></td>
+<td>History, filtering, cancellation with stock restoration, profit calculation</td>
+</tr>
+<tr>
+<td><strong>Customers &amp; suppliers</strong></td>
+<td>CRUD, credit limits and balances</td>
+</tr>
+<tr>
+<td><strong>Purchase orders</strong></td>
+<td>Line items, status workflow, receiving</td>
+</tr>
+<tr>
+<td><strong>Reporting</strong></td>
+<td>Sales/inventory/customer CSV exports, cash summary, Z-report, profit</td>
+</tr>
+<tr>
+<td><strong>Subscriptions</strong></td>
+<td>Plans, enforced limits, M-Pesa STK-push payment, auto/manual activation, renewal warnings</td>
+</tr>
+<tr>
+<td><strong>Offline sync</strong></td>
+<td>Local outbox, batch push, connectivity gating</td>
+</tr>
+<tr>
+<td><strong>Fiscalisation</strong></td>
+<td>KRA eTIMS sales submission and fiscal receipt data</td>
+</tr>
+<tr>
+<td><strong>Security</strong></td>
+<td>Field-level AES-256-GCM, optional SQLCipher full-database encryption</td>
+</tr>
+<tr>
+<td><strong>Cloud backup</strong></td>
+<td>Optional push of sales to a configured backend</td>
+</tr>
+</tbody>
+</table>
+<h2 id="non-functional-characteristics">1.6 Non-functional characteristics</h2>
+<ul>
+<li><strong>Offline-first:</strong> every sale succeeds locally; the network is never on the critical path.</li>
+<li><strong>Isolation by construction:</strong> global EF Core query filters enforce soft-delete and tenant scoping for every entity.</li>
+<li><strong>Least-privilege integrations:</strong> only client-safe keys (IntaSend publishable key) ship in the app; secrets belong on a backend.</li>
+<li><strong>Resilience:</strong> fiscalisation and sync failures never block a sale.</li>
+<li><strong>Portability:</strong> identical behaviour on phone, tablet and desktop.</li>
+</ul>
+<h2 id="technology-stack">1.7 Technology stack</h2>
+<table style="width:69%;">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 47%" />
+</colgroup>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Choice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Language / runtime</td>
+<td>C# / .NET 8</td>
+</tr>
+<tr>
+<td>UI framework</td>
+<td>.NET MAUI (XAML + MVVM)</td>
+</tr>
+<tr>
+<td>MVVM toolkit</td>
+<td>CommunityToolkit.Mvvm 8.4.2</td>
+</tr>
+<tr>
+<td>Data access</td>
+<td>Entity Framework Core 8.0.13 (SQLite provider)</td>
+</tr>
+<tr>
+<td>Local database</td>
+<td>SQLite, optionally SQLCipher-encrypted</td>
+</tr>
+<tr>
+<td>Crypto provider</td>
+<td>SQLitePCLRaw.bundle_e_sqlcipher 2.1.10</td>
+</tr>
+<tr>
+<td>JSON</td>
+<td>Newtonsoft.Json 13.0.4</td>
+</tr>
+<tr>
+<td>Tests</td>
+<td>xUnit 2.5.3, coverlet 6.0.0</td>
+</tr>
+<tr>
+<td>Payments</td>
+<td>IntaSend (M-Pesa STK push)</td>
+</tr>
+<tr>
+<td>Fiscalisation</td>
+<td>KRA eTIMS (VSCU)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="system-context">1.8 System context</h2>
+<p>The diagram below shows the actors, the application, and every external system it can talk to.</p>
+<figure>
+<img src="media/inventorypos-project-documentation/media/image1.png" style="width:6.69792in;height:5.35417in" alt="Diagram 01" />
+<figcaption aria-hidden="true"><p>Diagram 01</p></figcaption>
+</figure>
+<h2 id="subscription-plans">1.9 Subscription plans</h2>
+<p>Limits are enforced at runtime by <code>SubscriptionService</code>. Paid plans renew on a 30-day cycle.</p>
+<table style="width:63%;">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 15%" />
+</colgroup>
+<thead>
+<tr>
+<th>Plan</th>
+<th>Users</th>
+<th>Branches</th>
+<th>Products</th>
+<th>Price / month</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Free</td>
+<td>2</td>
+<td>1</td>
+<td>100</td>
+<td>Free</td>
+</tr>
+<tr>
+<td>Basic</td>
+<td>5</td>
+<td>3</td>
+<td>1,000</td>
+<td>KES 500</td>
+</tr>
+<tr>
+<td>Pro</td>
+<td>20</td>
+<td>10</td>
+<td>10,000</td>
+<td>KES 1,500</td>
+</tr>
+<tr>
+<td>Enterprise</td>
+<td>Unlimited</td>
+<td>Unlimited</td>
+<td>Unlimited</td>
+<td>KES 5,000</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="chapter-2-system-architecture">Chapter 2 System Architecture</h1>
+<h2 id="architectural-style">2.1 Architectural style</h2>
+<p>InventoryPOS is a <strong>layered, MVVM desktop/mobile application</strong> with a clean dependency direction: presentation depends on application and domain services, which depend on persistence, and everything ultimately depends on a shared core of entities, enums, exceptions and utilities. There is <strong>no server component in the box</strong>; the app is the system of record for a single business and optionally communicates outward.</p>
+<p>The core principles are:</p>
+<ol type="1">
+<li><strong>Separation of concerns</strong> UI (XAML) is separated from logic (ViewModels) and from data access (services backed by EF Core).</li>
+<li><strong>Inversion of control</strong> every service is registered in a DI container (<code>MauiProgram</code>) and injected via interfaces.</li>
+<li><strong>Local-first</strong> the SQLite database is authoritative; integrations are additive and non-blocking.</li>
+</ol>
+<h2 id="solution-and-project-structure">2.2 Solution and project structure</h2>
+<p>The solution contains five projects, all under <code>src/</code>:</p>
+<pre><code>src/
+  InventoryPOS.Core        Domain: entities, enums, exceptions, utilities, tenancy
+  InventoryPOS.Data        EF Core DbContext, repositories, seed data, migrations
+  InventoryPOS.Services    Subscriptions, Accounts, Mpesa, eTIMS, Sync, Reporting
+  InventoryPOS.Maui        MAUI app: Views, ViewModels, Services (auth, data, print, sync)
+  InventoryPOS.UnitTests   xUnit tests (Core, Data, Services layers)
+database/                  Local database assets (InventoryPOS.db, Schema.sql)
+scripts/                   Build &amp; helper scripts (incl. docs export)
+docs/                      Documentation (this file, API, schema, deployment)
+signing/                   Android keystore and Windows PFX for releases</code></pre>
+<p>Project dependencies:</p>
+<figure>
+<img src="media/inventorypos-project-documentation/media/image2.png" style="width:5.83333in;height:1.39137in" alt="Diagram 02" />
+<figcaption aria-hidden="true"><p>Diagram 02</p></figcaption>
+</figure>
+<p>Note that <code>InventoryPOS.UnitTests</code> intentionally does <strong>not</strong> reference the MAUI project: the MAUI project targets mobile/desktop TFMs and cannot be loaded by the <code>net8.0</code> test host. This shapes the testing strategy (see Chapter 5) business logic that must be unit-tested lives in <code>Core</code>, <code>Data</code> and <code>Services</code>.</p>
+<h2 id="section"></h2>
+<h2 id="section-1"></h2>
+<h2 id="section-2"></h2>
+<h2 id="section-3"></h2>
+<h2 id="section-4"></h2>
+<h2 id="section-5"></h2>
+<h2 id="section-6"></h2>
+<h2 id="section-7"></h2>
+<h2 id="section-8"></h2>
+<h2 id="section-9"></h2>
+<h2 id="section-10"></h2>
+<h2 id="section-11"></h2>
+<h2 id="layered-architecturediagram-03-diagram-03">2.3 Layered architecture<img src="media/inventorypos-project-documentation/media/image3.png" style="width:6.75in;height:7.9375in" alt="Diagram 03" />-Diagram 03</h2>
+<h2 id="deployment-view">2.4 Deployment view</h2>
+<figure>
+<img src="media/inventorypos-project-documentation/media/image4.png" style="width:5.83333in;height:7.40109in" alt="Diagram 04" />
+<figcaption aria-hidden="true"><p>Diagram 04</p></figcaption>
+</figure>
+<h2 id="dependency-injection-composition-root">2.5 Dependency injection composition root</h2>
+<p><code>MauiProgram.CreateMauiApp()</code> is the single composition root. Its registrations, in order, are:</p>
+<ul>
+<li><strong>Tenancy &amp; database:</strong> <code>ITenantContext</code> (singleton), <code>DatabaseEncryptionService</code> (singleton, initialised at startup), <code>SqliteConnectionFactory</code> (singleton), and <code>AppDbContext</code> built from the factory’s connection string.</li>
+<li><strong>Platform helpers:</strong> <code>LocalStorageService</code>, <code>PreferencesService</code>.</li>
+<li><strong>Payments:</strong> <code>MpesaOptionsProvider</code>, <code>IMpesaClient</code> â†’ <code>MpesaClient</code>, <code>ISubscriptionPaymentService</code> â†’ <code>SubscriptionPaymentService</code>.</li>
+<li><strong>Fiscal:</strong> <code>EtimsOptionsProvider</code>, <code>IEtimsClient</code> â†’ <code>EtimsClient</code>, <code>IEtimsService</code> â†’ <code>EtimsService</code>.</li>
+<li><strong>Repositories:</strong> generic <code>IRepository&lt;&gt;</code> â†’ <code>BaseRepository&lt;&gt;</code> plus specific repositories (customer, sale, user, product, supplier, purchase order).</li>
+<li><strong>Application services:</strong> data, auth, business, cipher, subscription, account, inventory, customer, supplier, sale, authorization, payment, notification, print, report, purchase order, stock transfer, stock alerts.</li>
+<li><strong>Sync:</strong> <code>IConnectivity</code>, <code>ISyncTransport</code> â†’ <code>HttpSyncTransport</code>, <code>SalesSyncService</code>, <code>SyncOptionsProvider</code>, <code>ISyncService</code> â†’ <code>SyncService</code>.</li>
+<li><strong>ViewModels and Pages:</strong> all transient.</li>
+</ul>
+<p>Lifecycle choices matter: <code>AppDbContext</code> and most application services are <strong>scoped</strong>, <code>TenantContext</code>, the connection factory, encryption service and the options providers are <strong>singletons</strong>, and the connectivity abstraction is a singleton wrapping <code>Connectivity.Current</code>.</p>
+<h2 id="application-startup-sequence">2.6 Application startup sequence</h2>
+<p>Startup runs the database bootstrap and seeding, restores the tenant for a persisted session, then routes to the login screen.</p>
+<figure>
+<img src="media/inventorypos-project-documentation/media/image5.png" style="width:5.83333in;height:2.58184in" alt="Diagram 05" />
+<figcaption aria-hidden="true"><p>Diagram 05</p></figcaption>
+</figure>
+<p><code>DataService.InitializeAsync()</code> is deliberately defensive. It handles three cases: a database with no migrations (created via <code>EnsureCreated</code>), a normal database with an EF migrations-history table, and a <strong>legacy</strong> database created by an early <code>EnsureCreated</code> build. For the legacy case it adds any missing columns and marks all migrations as applied so future migrations continue from a known baseline.</p>
+<h2 id="requestresponse-flow-through-the-layers">2.7 Request/response flow through the layers</h2>
+<p>A representative read (loading the dashboard) and a representative write (a sale) both follow the same path: View/ViewModel â†’ application service â†’ EF Core <code>DbContext</code> â†’ SQLite, with global query filters silently enforcing tenant and soft-delete rules on every statement.</p>
+<h2 id="configuration-and-options-providers">2.8 Configuration and options providers</h2>
+<p>Per-installation settings are held in platform <code>Preferences</code> and resolved at call time through small provider classes, which keeps secrets and environment-specific values out of the UI and out of source control.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Provider</th>
+<th>Preferences keys</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MpesaOptionsProvider</code></td>
+<td><code>IntaSendPublishableKey</code>, <code>IntaSendSandbox</code></td>
+<td>M-Pesa collection</td>
+</tr>
+<tr>
+<td><code>SyncOptionsProvider</code></td>
+<td><code>SyncBaseUrl</code>, <code>SyncApiKey</code></td>
+<td>Cloud backup endpoint</td>
+</tr>
+<tr>
+<td><code>EtimsOptionsProvider</code></td>
+<td><code>EtimsBaseUrl</code>, <code>EtimsTin</code>, <code>EtimsBranchId</code>, <code>EtimsDeviceSerial</code>, <code>EtimsClientId</code>, <code>EtimsClientSecret</code></td>
+<td>KRA fiscalisation</td>
+</tr>
+</tbody>
+</table>
+<p>Sensitive keys and session state are stored in <strong>OS secure storage</strong> (Keychain / Keystore via MAUI <code>SecureStorage</code>): the device master key, the SQLCipher passphrase, and session identifiers.</p>
+<hr />
+<h1 id="chapter-3-data-model-and-persistence">Chapter 3 Data Model and Persistence</h1>
+<h2 id="overview">3.1 Overview</h2>
+<p>Persistence is <strong>Entity Framework Core 8</strong> against <strong>SQLite</strong>. The database file lives at <code>FileSystem.AppDataDirectory/InventoryPOS.db</code> and is created and upgraded from <strong>EF Core migrations</strong> on first run. The domain model is made of 20 entities that all derive from <code>BaseEntity</code>, giving every row an identity plus audit and soft-delete columns (<code>Id</code>, <code>CreatedAt</code>, <code>UpdatedAt</code>, <code>IsDeleted</code>).</p>
+<h2 id="entity-relationship-model">3.2 Entity-relationship model</h2>
+<figure>
+<img src="media/inventorypos-project-documentation/media/image6.png" style="width:5.83333in;height:4.79911in" alt="Diagram 06" />
+<figcaption aria-hidden="true"><p>Diagram 06</p></figcaption>
+</figure>
+<h2 id="tenancy-and-soft-delete-strategies">3.3 Tenancy and soft-delete strategies</h2>
+<p>Tenant isolation is enforced <strong>in the data layer</strong>, not just the UI, so a coding mistake in a ViewModel cannot expose another business’s rows. This is implemented in <code>AppDbContext.ApplyGlobalFilters</code> using reflection over every entity that derives from <code>BaseEntity</code>:</p>
+<ol type="1">
+<li>A <strong>soft-delete filter</strong> (<code>!IsDeleted</code>) is applied to every <code>BaseEntity</code>.</li>
+<li>If the entity exposes an <code>int BusinessId</code> property, a <strong>tenant filter</strong> is added: <code>BusinessId == CurrentTenantId</code>, unless <code>CurrentTenantId == 0</code>, in which case the tenant predicate is bypassed.</li>
+</ol>
+<p>The rule that <code>Business</code> itself only receives the soft-delete filter (it has no <code>BusinessId</code>) is intentional. The <code>null</code>/<code>0</code> bypass exists so infrastructure code seeding and sign-in can operate across tenants. <code>AuthService.LoginAsync</code> explicitly calls <code>.IgnoreQueryFilters()</code> to find a user before a tenant is known, then activates the tenant for the rest of the session.</p>
+<figure>
+<img src="media/inventorypos-project-documentation/media/image7.png" style="width:5.83333in;height:10.13242in" alt="Diagram 07" />
+<figcaption aria-hidden="true"><p>Diagram 07</p></figcaption>
+</figure>
+<p><code>CurrentTenantId</code> is read from the singleton <code>ITenantContext</code> and is evaluated <strong>per query</strong>, so changing the active tenant is immediately reflected without recreating the <code>DbContext</code>.</p>
+<h2 id="migrations">3.4 Migrations</h2>
+<p>The schema is versioned by seven EF Core migrations:</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>Migration</th>
+<th>Adds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>InitialCreate</code></td>
+<td>Core tables (businesses, products, sales, customers, etc.)</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>AddMultiTenancyAndSubscriptions</code></td>
+<td>Tenant and subscription columns/plans</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>AddSubscriptionPayments</code></td>
+<td><code>SubscriptionPayments</code> table</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>AddStockMovements</code></td>
+<td><code>StockMovements</code> ledger + indexes</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>AddSaleItemCostPrice</code></td>
+<td><code>SaleItems.CostPrice</code> (profit calculation)</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>AddStockTransfers</code></td>
+<td><code>StockTransfers</code> + <code>StockTransferItems</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>AddFiscalReceiptFields</code></td>
+<td>Fiscal columns on <code>Sales</code> (eTIMS)</td>
+</tr>
+</tbody>
+</table>
+<p>Migrations are authored with the EF tools and applied automatically at startup:</p>
+<pre><code>dotnet ef migrations add &lt;Name&gt; `
+  -p src\InventoryPOS.Data\InventoryPOS.Data.csproj `
+  -s src\InventoryPOS.Data\InventoryPOS.Data.csproj</code></pre>
+<h2 id="repository-pattern">3.5 Repository pattern</h2>
+<p><code>IRepository&lt;T&gt;</code> / <code>BaseRepository&lt;T&gt;</code> provide a small, testable persistence API (get by id, find, count, add, update, delete, save). Specialised repositories (<code>ProductRepository</code>, <code>SaleRepository</code>, <code>CustomerRepository</code>, <code>UserRepository</code>, <code>SupplierRepository</code>, <code>PurchaseOrderRepository</code>) add query methods specific to their aggregate. Services may also inject <code>AppDbContext</code> directly for transactional work for example, <code>SaleService</code> opens a transaction and mutates products, stock movements, payments and the sale in a single unit of work.</p>
+<h2 id="encryption-at-rest">3.6 Encryption at rest</h2>
+<p>InventoryPOS protects data at <strong>two independent levels</strong>, both optional and backward-compatible.</p>
+<h3 id="field-level-encryption-always-available">3.6.1 Field-level encryption (always available)</h3>
+<p><code>CipherService</code> implements per-business field encryption using <code>EncryptionHelper</code> (AES-256-GCM, 32-byte key, 12-byte nonce, 16-byte tag; ciphertext is <code>base64(nonce â€– ciphertext â€– tag)</code>). The <strong>key hierarchy</strong> is:</p>
+<ol type="1">
+<li>A <strong>device master key</strong> is generated once and stored in OS secure storage.</li>
+<li>Each business gets a random <strong>data key</strong>, stored <strong>wrapped</strong> (encrypted with the master key) in <code>Business.WrappedDataKey</code>. The raw data key is never written.</li>
+<li>Sensitive fields are encrypted with the unwrapped business data key.</li>
+</ol>
+<p>Because GCM is authenticated, tampered ciphertext is rejected on decryption. The same primitive also powers password-independent key wrapping.</p>
+<h3 id="whole-database-encryption-sqlcipher-opt-in">3.6.2 Whole-database encryption (SQLCipher, opt-in)</h3>
+<p><code>DatabaseEncryptionService</code> adds optional <strong>full-database encryption</strong>:</p>
+<ul>
+<li>The app ships <strong>SQLCipher</strong> (<code>SQLitePCLRaw.bundle_e_sqlcipher</code>) instead of plain SQLite.</li>
+<li>Enabling encryption generates a random 32-byte passphrase, stores it in secure storage, and <strong>migrates the existing plaintext database in place</strong> using <code>ATTACH DATABASE â€¦ KEY â€¦</code> followed by <code>sqlcipher_export</code>.</li>
+<li>A <strong>restart is required</strong> so new connections use the key.</li>
+<li>By default no passphrase is stored and the database remains a plain SQLite file, so existing installations keep working untouched.</li>
+<li><code>SqliteConnectionFactory</code> attaches the passphrase to the connection string only when encryption is active, and always sets <code>Foreign Keys=True</code>.</li>
+</ul>
+<figure>
+<img src="media/inventorypos-project-documentation/media/image8.png" style="width:5.83333in;height:4.91752in" alt="Diagram 08" />
+<figcaption aria-hidden="true"><p>Diagram 08</p></figcaption>
+</figure>
+<h2 id="seed-data">3.7 Seed data</h2>
+<p><code>DatabaseSeeder</code> provisions a <strong>demonstration tenant</strong> the first time the app runs: sample businesses (<code>GMNEX Business Solutions</code>, <code>SmartP Kenya</code>, <code>Scholars Comfort</code>, <code>LUSI Stores</code>), three users (<code>admin</code>, <code>manager</code>, <code>seller</code>), a set of categories, products, customers and suppliers. Seeded users are created with <code>RequiresPasswordChange = true</code>, forcing a password change at first sign-in. Registration of a new business seeds a default “Main” branch and three default categories automatically.</p>
+<hr />
+<h1 id="chapter-4-functional-modules-and-application-services">Chapter 4 Functional Modules and Application Services</h1>
+<p>This chapter walks through each functional area from the user’s perspective and names the code that implements it.</p>
+<h2 id="authentication-and-authorisation">4.1 Authentication and authorisation</h2>
+<p><strong>Sign-in flow.</strong> <code>LoginViewModel</code> collects credentials and calls <code>AuthService.LoginAsync</code>. The service finds the user across tenants (<code>IgnoreQueryFilters</code>), rejects locked accounts, verifies the PBKDF2 hash, and on success checks that the tenant’s subscription is active (<code>SubscriptionService.EnsureActiveAsync</code>). It then records the session in secure storage, updates <code>LastLoginAt</code>/<code>IsOnline</code>, and <strong>activates tenant isolation</strong> by setting <code>ITenantContext.BusinessId</code>. First-time users are prompted to change their seeded password before continuing.</p>
+<figure>
+<img src="media/inventorypos-project-documentation/media/image9.png" style="width:5.83333in;height:4.36012in" alt="Diagram 09" />
+<figcaption aria-hidden="true"><p>Diagram 09</p></figcaption>
+</figure>
+<p><strong>Password and session policy.</strong></p>
+<ul>
+<li>Passwords are hashed with <strong>PBKDF2-SHA256, 100,000 iterations</strong>, a 32-byte per-user salt, and fixed-time comparison.</li>
+<li>Password policy: minimum 8 characters with upper and lower case, a digit and a special character.</li>
+<li><strong>5 failed logins</strong> trigger a <strong>15-minute lockout</strong>.</li>
+<li>Sessions expire after <strong>8 hours</strong>; <code>GetCurrentUserAsync</code> detects expiry and logs the user out.</li>
+</ul>
+<p><strong>Authorisation.</strong> <code>AuthorizationService</code> exposes intent-named checks (<code>CanManageProductsAsync</code>, <code>CanCancelSalesAsync</code>, <code>CanManageSettingsAsync</code>, â€¦) built on <code>HasPermissionAsync(requiredRole)</code> with the numeric role comparison. Services re-check permissions server-side (e.g. <code>SaleService.CancelSaleAsync</code> requires Manager; <code>StockTransferService</code> requires product-management rights), so UI visibility is never the only guard.</p>
+<h2 id="point-of-sale-and-the-sales-lifecycle">4.2 Point of Sale and the sales lifecycle</h2>
+<p>The POS screen (<code>POSViewModel</code> / <code>POSPage</code>) supports product search, a cart, manual discounts, tax, <strong>split payments</strong>, <strong>held sales</strong>, debtor credit and receipt printing. Completing a sale is a single transactional unit of work:</p>
+<ol type="1">
+<li>The sale is marked <code>Completed</code>.</li>
+<li>For each cart line the product’s stock is decremented, guarded against insufficient stock, and a <strong>stock-movement ledger</strong> record is written.</li>
+<li>Payments are recorded for each tender (the whole payment, or per-split).</li>
+<li>The transaction commits, then low-stock alerts are evaluated.</li>
+<li><strong>Best-effort</strong> KRA eTIMS submission runs and, if configured, stores the fiscal receipt number/signature/status on the sale.</li>
+</ol>
+<p>A fiscal or network failure never rolls back the sale resilience is a hard rule.</p>
+<figure>
+<img src="media/inventorypos-project-documentation/media/image10.png" style="width:5.83333in;height:2.47768in" alt="Diagram 10" />
+<figcaption aria-hidden="true"><p>Diagram 10</p></figcaption>
+</figure>
+<p><strong>Split payments.</strong> A sale can be settled by more than one tender. Each <code>PaymentTender</code> (method, amount, reference) is processed individually and a <code>Payment</code> row is written per tender; the debtor case carries any outstanding balance.</p>
+<p><strong>Held sales.</strong> A sale in progress can be parked (“held”) and resumed later without losing the cart.</p>
+<p><strong>Cancellation.</strong> Cancelling a completed sale restores stock (writing reversal movements marked <code>SaleCancelled</code>) and requires Manager rights.</p>
+<h2 id="inventory-and-the-stock-ledger">4.3 Inventory and the stock ledger</h2>
+<p>Every quantity change is written to the immutable <code>StockMovements</code> table with the change, the resulting balance (<code>QuantityAfter</code>), the movement type, a reference and the operator. Stock changes happen through <code>StockLedger.Record</code>, so a mutation and its audit record are committed together. Movement types include Opening, Sale, SaleCancelled, Refund, Purchase, Adjustment, TransferIn and TransferOut.</p>
+<p><code>StockAlertService</code> scans a business’s products after stock-affecting operations and creates <code>LowStock</code>/<code>OutOfStock</code> alerts (de-duplicated) when quantity falls to or below the minimum level. Alerts are acknowledged through the inventory UI.</p>
+<h2 id="branch-stock-transfers">4.4 Branch stock transfers</h2>
+<p>Head offices move stock between branches with a custody-aware workflow. Transfers are created as <code>Pending</code>; dispatching <strong>removes</strong> stock from the source and moves the transfer to <code>InTransit</code>; receiving <strong>adds</strong> stock to the destination and moves it to <code>Received</code>. Cancelling an in-transit transfer <strong>returns the stock to the source</strong>. Quantities must be positive and the two branches distinct.</p>
+<figure>
+<img src="media/inventorypos-project-documentation/media/image11.png" style="width:5.83333in;height:6.46072in" alt="Diagram 11" />
+<figcaption aria-hidden="true"><p>Diagram 11</p></figcaption>
+</figure>
+<h2 id="products-customers-suppliers-and-purchase-orders">4.5 Products, customers, suppliers and purchase orders</h2>
+<ul>
+<li><strong>Products</strong> support barcodes (unique per business), categories, purchase and selling prices, tax rate, unit of measure, service items (no stock), and derived stock status. Adding a product respects the tenant’s product limit and records an opening stock movement.</li>
+<li><strong>Customers</strong> carry contact details, credit limits and running balances (used by debtor sales). <strong>Suppliers</strong> are simple master records.</li>
+<li><strong>Purchase orders</strong> have line items and a Draft â†’ Submitted â†’ Approved â†’ Received â†’ Cancelled workflow, with receiving that feeds stock back in.</li>
+</ul>
+<h2 id="reporting">4.6 Reporting</h2>
+<p><code>ReportService</code> produces <strong>CSV</strong> exports to the app cache directory and returns the path so the UI can share or open the file:</p>
+<ul>
+<li><strong>Sales report</strong> (invoices, totals, method, status, profit).</li>
+<li><strong>Inventory report</strong> (prices, stock, stock value).</li>
+<li><strong>Customer report</strong> (contact, credit limit, balance).</li>
+<li><strong>Cash summary</strong> and <strong>Z-report</strong> (cash in, refunds, expected vs counted cash, variance).</li>
+<li><strong>Profit</strong> (revenue minus cost of goods sold, using <code>SaleItems.CostPrice</code>).</li>
+</ul>
+<p><code>PdfReportGenerator</code> and <code>ExcelReportGenerator</code> exist as placeholders for future richer output.</p>
+<h2 id="subscriptions-and-m-pesa-billing">4.7 Subscriptions and M-Pesa billing</h2>
+<p>Self-registration starts a <strong>14-day Free trial</strong>. Upgrading or renewing a paid plan triggers an <strong>IntaSend STK push</strong> (Lipa na M-Pesa Express). A <code>SubscriptionPayment</code> is recorded as <code>Pending</code>, the customer approves on their phone, and activation happens either <strong>automatically</strong> (polling IntaSend’s payment status by <code>invoice_id</code>) or <strong>manually</strong> by an admin on the Manual Activations page. Admin settings show a <strong>renewal warning</strong> as the expiry approaches. Phone numbers are normalised to the <code>2547â€¦</code> format before submission.</p>
+<figure>
+<img src="media/inventorypos-project-documentation/media/image12.png" style="width:5.83333in;height:3.4375in" alt="Diagram 12" />
+<figcaption aria-hidden="true"><p>Diagram 12</p></figcaption>
+</figure>
+<p>Only IntaSend’s <strong>publishable key</strong> ships in the app. <code>IMpesaClient</code> also implements <code>IsValidWebhook</code> (fixed-time challenge comparison) for when a backend is added to receive webhook confirmations.</p>
+<h2 id="offline-sync-outbox">4.8 Offline sync (outbox)</h2>
+<p>Sales are the sync unit. The <strong>database itself is the queue</strong>: a sale is pending whenever <code>IsSynced</code> is false. <code>SalesSyncService.PushPendingAsync</code> selects up to <strong>200</strong> pending sales with their items, posts them via <code>HttpSyncTransport</code> to <code>POST {BaseUrl}/api/sales/sync</code> (optionally with an <code>X-Api-Key</code> header), and marks them synced <strong>only after</strong> the transport succeeds. <code>SyncService</code> (MAUI) gates the push on <code>IConnectivity</code> reporting internet access. A crash or dropped connection simply leaves the sales queued for the next attempt.</p>
+<figure>
+<img src="media/inventorypos-project-documentation/media/image13.png" style="width:6.72072in;height:3.58559in" alt="Diagram 13" />
+<figcaption aria-hidden="true"><p>Diagram 13</p></figcaption>
+</figure>
+<h2 id="kra-etims-fiscalisation">4.9 KRA eTIMS fiscalisation</h2>
+<p>When configured, each completed sale is mapped to the eTIMS sales schema by <code>EtimsService.BuildInvoice</code> (a pure, unit-tested mapping) and submitted by <code>EtimsClient</code> to <code>USER/api/trnsSales/saveSales</code>. The response’s <code>resultCd == "000"</code> indicates success and carries the fiscal receipt number (<code>rcptNo</code>), internal data and signature. These are stored on the sale (<code>FiscalReceiptNumber</code>, <code>FiscalInternalData</code>, <code>FiscalSignature</code>, <code>FiscalStatus</code>) and printed on the receipt. When eTIMS is not configured, submission is skipped silently.</p>
+<figure>
+<img src="media/inventorypos-project-documentation/media/image14.png" style="width:6.53153in;height:3.6036in" alt="Diagram 14" />
+<figcaption aria-hidden="true"><p>Diagram 14</p></figcaption>
+</figure>
+<h2 id="printing">4.10 Printing</h2>
+<p><code>ReceiptPrinterService</code> renders a receipt as HTML and shares it via the platform share sheet; when fiscal data is present it includes the KRA receipt number and signature, and shows a “pending” note when a fiscal submission failed. <code>BarcodeLabelService</code> and <code>ThermalPrintService</code> are present as placeholders for label and ESC/POS thermal printing.</p>
+<h2 id="navigation-and-screens">4.11 Navigation and screens</h2>
+<p><code>AppShell</code> defines the route structure: a bootstrap <code>MainPage</code> (init), <code>Login</code>, <code>Register</code>, a Home tab bar (Dashboard, POS, Products), a Manage tab bar (Inventory, Sales, Customers), and standalone routes for Suppliers, Purchase Orders, Branch Transfers, Reports, Settings and Manual Activations.</p>
+<hr />
+<h1 id="chapter-5-security-quality-operations-and-roadmap">Chapter 5 Security, Quality, Operations and Roadmap</h1>
+<h2 id="security-model">5.1 Security model</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Concern</th>
+<th>Control</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Password storage</td>
+<td>PBKDF2-SHA256, 100k iterations, per-user 32-byte salt, fixed-time compare</td>
+</tr>
+<tr>
+<td>Brute force</td>
+<td>5 attempts â†’ 15-minute lockout</td>
+</tr>
+<tr>
+<td>Session</td>
+<td>8-hour timeout, session state in secure storage</td>
+</tr>
+<tr>
+<td>Transport of secrets</td>
+<td>Only client-safe keys in-app; IntaSend secret/webhook challenge server-side; <code>IsValidWebhook</code> fixed-time comparison</td>
+</tr>
+<tr>
+<td>Data at rest (fields)</td>
+<td>AES-256-GCM with per-business data key wrapped by a device master key</td>
+</tr>
+<tr>
+<td>Data at rest (database)</td>
+<td>Optional SQLCipher full-database encryption; passphrase in secure storage</td>
+</tr>
+<tr>
+<td>Tenant isolation</td>
+<td>Global EF Core query filters on every <code>BaseEntity</code> with <code>BusinessId</code></td>
+</tr>
+<tr>
+<td>Auditability</td>
+<td>Immutable stock-movement ledger; fiscal data retained on sales</td>
+</tr>
+<tr>
+<td>Least privilege</td>
+<td>Intent-named <code>Canâ€¦</code> authorisation checks re-verified in services</td>
+</tr>
+</tbody>
+</table>
+<h2 id="testing-strategy-and-current-coverage">5.2 Testing strategy and current coverage</h2>
+<p>Tests live in <code>InventoryPOS.UnitTests</code> and run against the <code>Core</code>, <code>Data</code> and <code>Services</code> layers (the MAUI project is intentionally out of scope). The suite currently contains <strong>9 test classes</strong> and <strong>44 passing tests</strong>, roughly:</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Test class</th>
+<th>Focus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>EncryptionHelperTests</code></td>
+<td>AES-256-GCM encrypt/decrypt, key wrapping, tamper rejection</td>
+</tr>
+<tr>
+<td><code>DatabaseEncryptionTests</code></td>
+<td>SQLCipher: encrypted file has no SQLite header; wrong/absent key fails; correct key reads</td>
+</tr>
+<tr>
+<td><code>SubscriptionPlansTests</code></td>
+<td>Plan limits and pricing</td>
+</tr>
+<tr>
+<td><code>AccountServiceTests</code></td>
+<td>Tenant registration and provisioning</td>
+</tr>
+<tr>
+<td><code>SubscriptionPaymentServiceTests</code></td>
+<td>Payment records and activation logic</td>
+</tr>
+<tr>
+<td><code>MpesaClientTests</code></td>
+<td>IntaSend client request/response handling</td>
+</tr>
+<tr>
+<td><code>SalesSyncServiceTests</code></td>
+<td>Outbox batching and mark-synced behaviour</td>
+</tr>
+<tr>
+<td><code>EtimsServiceTests</code></td>
+<td>Invoice mapping, endpoint/headers, success and rejection parsing</td>
+</tr>
+<tr>
+<td><code>TenantIsolationTests</code></td>
+<td>Query filters scope rows to the active tenant (incl. stock transfers)</td>
+</tr>
+</tbody>
+</table>
+<p>Run the suite with:</p>
+<pre><code>dotnet test src\InventoryPOS.UnitTests\InventoryPOS.UnitTests.csproj</code></pre>
+<h2 id="build-run-and-deployment">5.3 Build, run and deployment</h2>
+<p><strong>Prerequisites</strong></p>
+<ul>
+<li>.NET 8 SDK with the <code>maui</code> workload (<code>dotnet workload install maui</code>).</li>
+<li>Android builds: JDK 17 and the Android SDK (platform 34, build-tools 34.0.0).</li>
+<li>iOS / Mac Catalyst builds require macOS with Xcode.</li>
+</ul>
+<p><strong>Windows desktop</strong></p>
+<pre><code>dotnet build src\InventoryPOS.Maui\InventoryPOS.Maui.csproj -f net8.0-windows10.0.19041.0
+dotnet run   --project src\InventoryPOS.Maui -f net8.0-windows10.0.19041.0</code></pre>
+<p><strong>Android</strong></p>
+<pre><code>dotnet build src\InventoryPOS.Maui\InventoryPOS.Maui.csproj -f net8.0-android -c Release</code></pre>
+<p>Signing material for releases is kept in <code>signing/</code> (<code>inventorypos.keystore</code>, <code>inventorypos.pfx</code>). Never commit production secrets; rotate keys if a device or keystore is compromised.</p>
+<p><strong>Target platform minimums:</strong> iOS 11.0, Mac Catalyst 13.1, Android 21.0, Windows 10 (10.0.17763.0).</p>
+<h2 id="operations">5.4 Operations</h2>
+<ul>
+<li><strong>First run:</strong> the app creates the SQLite database, applies migrations, seeds demo data, and routes to Login. Demo users are forced to change their password.</li>
+<li><strong>Reset:</strong> delete <code>InventoryPOS.db</code> from the app data folder and restart.</li>
+<li><strong>Enabling encryption:</strong> Settings â†’ Security â†’ <em>Encrypt database</em>, then restart. Losing the secure-storage passphrase renders the database unreadable.</li>
+<li><strong>Configuring integrations:</strong> Settings exposes Cloud Backup (sync URL/API key), Payment Settings (IntaSend publishable key/sandbox) and KRA eTIMS fields.</li>
+<li><strong>Cloud backup:</strong> requires an external endpoint accepting <code>POST /api/sales/sync</code>.</li>
+</ul>
+<h2 id="known-limitations-and-placeholders">5.5 Known limitations and placeholders</h2>
+<p>The following are intentionally non-functional placeholders at this version and are empty files in the tree:</p>
+<ul>
+<li><code>InventoryPOS.Services\Reporting\PdfReportGenerator.cs</code></li>
+<li><code>InventoryPOS.Services\Reporting\ExcelReportGenerator.cs</code></li>
+<li><code>InventoryPOS.Services\Cloud\CloudStorageService.cs</code></li>
+<li><code>InventoryPOS.Services\Cloud\SyncHubService.cs</code></li>
+<li><code>InventoryPOS.Maui\Services\Remote\{ApiClient,OnlineDatabaseService,SyncService}.cs</code></li>
+<li><code>InventoryPOS.Maui\Services\Local\{LocalDatabaseService,SqliteService}.cs</code></li>
+<li><code>InventoryPOS.Maui\Services\Sync\{SyncManager,ConflictResolver,OfflineQueueService}.cs</code></li>
+<li><code>InventoryPOS.Maui\Services\Print\{BarcodeLabelService,ThermalPrintService}.cs</code></li>
+<li><code>InventoryPOS.Maui\Helpers\{BarcodeScannerHelper,CameraHelper}.cs</code></li>
+<li>Legacy duplicate model classes under <code>InventoryPOS.Maui\Models\*</code>.</li>
+</ul>
+<p>There is <strong>no conflict resolution</strong> in sync yet (append-only push), no server component, and barcode/camera hardware integration is not implemented (the POS uses search instead of scanning).</p>
+<h2 id="roadmap">5.6 Roadmap</h2>
+<ol type="1">
+<li><strong>Backend service</strong> for multi-device sync, webhook-confirmed payments and central reporting, plus true conflict resolution.</li>
+<li><strong>Richer reporting</strong> real PDF/Excel generation and scheduled email reports.</li>
+<li><strong>Hardware integration</strong> barcode scanners, ESC/POS thermal printers, cash drawers, weighing scales.</li>
+<li><strong>eTIMS hardening</strong> align payload codes with the target device firmware and add a sandbox certification harness.</li>
+<li><strong>Inventory depth</strong> batches/expiry tracking, multi-location stock on hand.</li>
+<li><strong>Observability</strong> structured logging and health/diagnostic screens.</li>
+</ol>
+<h2 id="glossary">5.7 Glossary</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Term</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Tenant</strong></td>
+<td>A business; the unit of data isolation and billing</td>
+</tr>
+<tr>
+<td><strong>STK push</strong></td>
+<td>Safaricom “Lipa na M-Pesa” prompt sent to a customer’s phone</td>
+</tr>
+<tr>
+<td><strong>eTIMS</strong></td>
+<td>Kenya Revenue Authority electronic Tax Invoice Management System</td>
+</tr>
+<tr>
+<td><strong>VSCU</strong></td>
+<td>Virtual Sales Control Unit; the eTIMS device profile</td>
+</tr>
+<tr>
+<td><strong>Outbox</strong></td>
+<td>The set of locally-recorded sales not yet pushed to the backend</td>
+</tr>
+<tr>
+<td><strong>Z-report</strong></td>
+<td>End-of-day cash reconciliation summary</td>
+</tr>
+<tr>
+<td><strong>SQLCipher</strong></td>
+<td>SQLite build with transparent full-database encryption</td>
+</tr>
+</tbody>
+</table>
+<h2 id="appendix-a-repository-tree">5.8 Appendix A Repository tree</h2>
+<pre><code>D:\InventoryPOS
+â”œâ”€ InventoryPOS.sln
+â”œâ”€ README.md
+â”œâ”€ LICENSE
+â”œâ”€ docs/                     (this document, API, schema, deployment)
+â”œâ”€ database/                 (InventoryPOS.db, Schema.sql)
+â”œâ”€ scripts/                  (seed-data.ps1, setup-database.ps1, export-docs.ps1)
+â”œâ”€ signing/                  (Android keystore, Windows PFX)
+â””â”€ src/
+   â”œâ”€ InventoryPOS.Core/
+   â”œâ”€ InventoryPOS.Data/
+   â”œâ”€ InventoryPOS.Services/
+   â”œâ”€ InventoryPOS.Maui/
+   â””â”€ InventoryPOS.UnitTests/</code></pre>
+<h2 id="appendix-b-key-package-versions">5.9 Appendix B Key package versions</h2>
+<table style="width:66%;">
+<colgroup>
+<col style="width: 47%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th>Package</th>
+<th>Version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Microsoft.EntityFrameworkCore.Sqlite.Core</td>
+<td>8.0.13</td>
+</tr>
+<tr>
+<td>Microsoft.EntityFrameworkCore.Design / Tools</td>
+<td>8.0.13</td>
+</tr>
+<tr>
+<td>SQLitePCLRaw.bundle_e_sqlcipher</td>
+<td>2.1.10</td>
+</tr>
+<tr>
+<td>CommunityToolkit.Mvvm</td>
+<td>8.4.2</td>
+</tr>
+<tr>
+<td>Newtonsoft.Json</td>
+<td>13.0.4</td>
+</tr>
+<tr>
+<td>Microsoft.Maui.Controls</td>
+<td><code>$(MauiVersion)</code></td>
+</tr>
+<tr>
+<td>Microsoft.Extensions.Logging.Debug</td>
+<td>8.0.1</td>
+</tr>
+<tr>
+<td>xunit</td>
+<td>2.5.3</td>
+</tr>
+<tr>
+<td>Microsoft.NET.Test.Sdk</td>
+<td>17.8.0</td>
+</tr>
+<tr>
+<td>coverlet.collector</td>
+<td>6.0.0</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><em>End of document.</em></p>
+</body>
+</html>

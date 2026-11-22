@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10.1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Probe - Research Findings and Implementation Plan</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="../research.css" />
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Probe - Research Findings and Implementation Plan</h1>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#probe-research-findings-and-implementation-plan" id="toc-probe-research-findings-and-implementation-plan">Probe: Research Findings and Implementation Plan</a>
+<ul>
+<li><a href="#executive-summary" id="toc-executive-summary">1. Executive Summary</a></li>
+<li><a href="#research-findings-evidence-of-governance-failure-in-kenya" id="toc-research-findings-evidence-of-governance-failure-in-kenya">2. Research Findings: Evidence of Governance Failure in Kenya</a>
+<ul>
+<li><a href="#presidency-website-two-defacements-in-eight-months" id="toc-presidency-website-two-defacements-in-eight-months">2.1 Presidency Website: Two Defacements in Eight Months</a></li>
+<li><a href="#ecitizen-platform-audit-warning-preceded-breach" id="toc-ecitizen-platform-audit-warning-preceded-breach">2.2 eCitizen Platform: Audit Warning Preceded Breach</a></li>
+<li><a href="#state-department-for-energy-personal-email-and-data-protection-non-compliance" id="toc-state-department-for-energy-personal-email-and-data-protection-non-compliance">2.3 State Department for Energy: Personal Email and Data Protection Non-Compliance</a></li>
+<li><a href="#national-threat-data-basic-deficiencies-dominate" id="toc-national-threat-data-basic-deficiencies-dominate">2.4 National Threat Data: Basic Deficiencies Dominate</a></li>
+<li><a href="#legal-and-regulatory-leverage" id="toc-legal-and-regulatory-leverage">2.5 Legal and Regulatory Leverage</a></li>
+</ul></li>
+<li><a href="#probes-tool-definition-and-design-boundaries" id="toc-probes-tool-definition-and-design-boundaries">3. Probe’s Tool Definition and Design Boundaries</a>
+<ul>
+<li><a href="#core-functions-three-nothing-more" id="toc-core-functions-three-nothing-more">3.1 Core Functions (Three, Nothing More)</a></li>
+<li><a href="#what-probe-is-not" id="toc-what-probe-is-not">3.2 What Probe Is Not</a></li>
+<li><a href="#authorized-targets-only" id="toc-authorized-targets-only">3.3 Authorized Targets Only</a></li>
+</ul></li>
+<li><a href="#implementation-plan" id="toc-implementation-plan">4. Implementation Plan</a>
+<ul>
+<li><a href="#phase-0-manual-assessment-current-phase" id="toc-phase-0-manual-assessment-current-phase">4.1 Phase 0: Manual Assessment (Current Phase)</a></li>
+<li><a href="#phase-1-scanner-core" id="toc-phase-1-scanner-core">4.2 Phase 1: Scanner Core</a></li>
+<li><a href="#phase-2-compliance-module" id="toc-phase-2-compliance-module">4.3 Phase 2: Compliance Module</a></li>
+<li><a href="#phase-3-report-generator" id="toc-phase-3-report-generator">4.4 Phase 3: Report Generator</a></li>
+<li><a href="#phase-4-validation" id="toc-phase-4-validation">4.5 Phase 4: Validation</a></li>
+</ul></li>
+<li><a href="#reference-links-for-phase-0-preparation" id="toc-reference-links-for-phase-0-preparation">5. Reference Links for Phase 0 Preparation</a>
+<ul>
+<li><a href="#government-website-incidents" id="toc-government-website-incidents">Government Website Incidents</a></li>
+<li><a href="#ecitizen-audit-and-breach" id="toc-ecitizen-audit-and-breach">eCitizen Audit and Breach</a></li>
+<li><a href="#energy-department-non-compliance" id="toc-energy-department-non-compliance">Energy Department Non-Compliance</a></li>
+<li><a href="#national-threat-data" id="toc-national-threat-data">National Threat Data</a></li>
+<li><a href="#legal-and-regulatory-framework" id="toc-legal-and-regulatory-framework">Legal and Regulatory Framework</a></li>
+</ul></li>
+<li><a href="#what-to-do-immediately" id="toc-what-to-do-immediately">6. What to Do Immediately</a></li>
+<li><a href="#a-note-on-scope-discipline" id="toc-a-note-on-scope-discipline">7. A Note on Scope Discipline</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="probe-research-findings-and-implementation-plan">Probe: Research Findings and Implementation Plan</h1>
+<p><strong>Project:</strong> Probe (Basic Exposure Scanner and Compliance Snapshot Tool) <strong>Institution:</strong> Dedan Kimathi University of Technology (DeKUT) — Centre for Data Research and Cyber Security (CeDReCS) <strong>Date:</strong> 28 October 2026 <strong>Current Phase:</strong> Phase 0 (Manual Assessment Preparation)</p>
+<h2 id="executive-summary">1. Executive Summary</h2>
+<p>This report consolidates research findings on governance-level cybersecurity failures in Kenya’s public sector and uses them to justify the design and boundaries of the Probe tool. The central conclusion is that repeated intrusions into high-value government systems are not the product of advanced persistent threats or AI-driven attacks, but of <strong>long-standing failures in basic security hygiene and governance accountability</strong>. The presidency website <code>president.go.ke</code> was defaced twice in eight months , the eCitizen platform was breached after an audit had already formally warned that it lacked a backup site and business continuity plan , and the State Department for Energy had officials using personal email for official business while failing to appoint a Data Protection Officer as required by law . These cases point to a single gap: <strong>decision-makers cannot see their own basic exposure and compliance status before an incident becomes a headline</strong>. Probe is designed to fill that gap, not to provide another advanced threat detection system.</p>
+<p>The tool’s scope is deliberately narrow: scan for basic exposed services, check Data Protection Act compliance status, and produce a one-page report readable by a Principal Secretary or County IT officer. The legal hook exists in Kenyan law, the threat evidence exists in national incident data, and the institutional home exists at DeKUT CeDReCS.</p>
+<h2 id="research-findings-evidence-of-governance-failure-in-kenya">2. Research Findings: Evidence of Governance Failure in Kenya</h2>
+<h3 id="presidency-website-two-defacements-in-eight-months">2.1 Presidency Website: Two Defacements in Eight Months</h3>
+<p><strong>November 2025 incident.</strong> A coordinated attack defaced multiple government websites, including <code>president.go.ke</code>, along with the ministries of Interior, Energy, Labour, Health, and Education, the DCI, and Immigration . Broadcasting and Telecommunications Principal Secretary Stephen Isaboke attributed the attack to a group known as PCP@Kenya and stated that websites were recovered within a couple of hours . Some defaced pages displayed neo-Nazi and white supremacist propaganda .</p>
+<p><strong>July 2026 incident.</strong> On Saturday 18 July 2026, <code>president.go.ke</code> was again defaced, this time with a ransom demand for <strong>five Bitcoin</strong> (approximately <strong>KES 41.3 million</strong>) and a threat to leak unspecified information . ICT Cabinet Secretary William Kabogo confirmed the attack and stated that the site was taken offline for containment and forensic analysis, claiming “no evidence” that sensitive data had been accessed . The defaced page read: “This message is the third time for you before we leak everything about you” .</p>
+<p><strong>Key fact:</strong> The interval between the two incidents was eight months. The first was a coordinated defacement; the second was a ransom defacement. This is a pattern, not bad luck.</p>
+<h3 id="ecitizen-platform-audit-warning-preceded-breach">2.2 eCitizen Platform: Audit Warning Preceded Breach</h3>
+<p>Auditor-General Nancy Gathungu’s report for the financial year ended June 2023 recorded that eCitizen operated <strong>without an approved ICT policy, without an ICT steering committee, without an approved business continuity plan, and without a secondary backup site</strong> . The platform was breached days into the following financial year. The warning had been formally tabled in Parliament before the attack occurred . This is the clearest available evidence that the problem is not a lack of technical knowledge but a failure to act on known governance deficiencies.</p>
+<h3 id="state-department-for-energy-personal-email-and-data-protection-non-compliance">2.3 State Department for Energy: Personal Email and Data Protection Non-Compliance</h3>
+<p>In July 2026, the National Assembly’s Public Accounts Committee (PAC) grilled the State Department for Energy after an Auditor-General audit flagged gaps in compliance with the Data Protection Act, 2019 . The specific failures included:</p>
+<ul>
+<li><strong>Failure to appoint a Data Protection Officer</strong> as required under Section 24 of the Act .</li>
+<li><strong>Failure to register</strong> as required with the Office of the Data Protection Commissioner .</li>
+<li><strong>Officials using personal email accounts</strong> (Yahoo, Gmail) to conduct official government business, contrary to a Head of the Public Service Circular issued on 14 June 2022 that bars public officers from using personal email for official communication .</li>
+</ul>
+<p>Parliament ordered a systems audit of the department and directed the Principal Secretary to ensure full compliance and submit documentary evidence of corrective measures . The Committee’s concern was explicit: the practice “weakens record keeping, reduces accountability and increases exposure to cyber security threats” .</p>
+<h3 id="national-threat-data-basic-deficiencies-dominate">2.4 National Threat Data: Basic Deficiencies Dominate</h3>
+<p>The National Kenya Computer Incident Response Team Coordination Centre (KE-CIRT/CC), domiciled at the Communications Authority of Kenya, reported <strong>2.55 billion system attack events</strong> in the July–September 2026 quarter alone . Key figures from that quarter:</p>
+<ul>
+<li><strong>Brute-force attacks rose 85.41%</strong> to 44.95 million .</li>
+<li><strong>Web application attacks increased 57.62%</strong> to 27.44 million .</li>
+<li><strong>Malware threats rose 20.01%</strong> to 70.8 million .</li>
+<li>The regulator attributed threats to <strong>weak credential management, particularly continued use of default passwords</strong>, and identified <strong>outdated software, weak access controls, and vulnerable databases</strong> as the main exploitation vectors .</li>
+</ul>
+<p>For the full financial year 2025/2026, Kenya recorded <strong>11.12 billion cyber threat events</strong>, a 29% increase from the previous year. System vulnerabilities accounted for the largest share at 10.64 billion events . The Communications Authority’s Director-General, David Mugonyi, linked the threat landscape to “weak credential management” and “poor encryption practices” .</p>
+<p><strong>This is directly relevant to Probe:</strong> The attacks succeeding at scale in Kenya exploit the exact conditions that a basic exposure scanner can detect—exposed services, outdated software, weak authentication configurations. The tool does not need to detect novel threats; it needs to make visible the conditions that are already being exploited.</p>
+<h3 id="legal-and-regulatory-leverage">2.5 Legal and Regulatory Leverage</h3>
+<p>The Kenya Data Protection Act, 2019 provides the legal basis for Probe’s compliance module. Section 24 defines the Data Protection Officer role . The Office of the Data Protection Commissioner has issued guidance on DPO designation, including the option for public bodies to share a DPO among several entities, taking into account size, complexity of processing, reporting lines, and operational independence .</p>
+<p>However, the current framework has a documented weakness: designation is not mandatory in the way it is in Mauritius, there is no certification requirement, and there is no verification mechanism . This means the gap between legal requirement and actual compliance is exactly where a tool like Probe can intervene—by making non-compliance visible to the accounting officer and to Parliament.</p>
+<p>The PAC’s questioning of the Energy department demonstrates that Parliament is already using audit findings to enforce compliance . Probe’s compliance snapshot would give accounting officers a way to see their status before the Auditor-General does.</p>
+<h2 id="probes-tool-definition-and-design-boundaries">3. Probe’s Tool Definition and Design Boundaries</h2>
+<h3 id="core-functions-three-nothing-more">3.1 Core Functions (Three, Nothing More)</h3>
+<p><strong>Function 1: Basic exposure check.</strong> Given an authorized target, scan for exposed RDP/VNC/SMB ports, outdated Windows/Office versions with known CVEs (specifically flagging CVE-2017-0199 given documented Kenyan exploitation patterns), publicly accessible cloud storage buckets, and missing MFA on administrative interfaces.</p>
+<p><strong>Function 2: Data Protection Act compliance snapshot.</strong> Check whether the organization has registered with the ODPC, designated a DPO, and published DPO contact details. Output a simple red/amber/green status on these legal requirements .</p>
+<p><strong>Function 3: One-page risk report.</strong> Generate a report readable by a Principal Secretary or County IT officer: what is exposed, what is missing, and what to fix first.</p>
+<h3 id="what-probe-is-not">3.2 What Probe Is Not</h3>
+<ul>
+<li><strong>Not a penetration test.</strong> It does not attempt login, brute-force, or exploitation.</li>
+<li><strong>Not an AI threat detection system.</strong> The documented threat data shows basic hygiene failures, not sophisticated novel attacks .</li>
+<li><strong>Not Zero Trust or blockchain.</strong> Those frameworks address different problems and have no validated deployment path at DeKUT’s scale.</li>
+<li><strong>Not a general-purpose global scanner.</strong> It is built for Kenyan public sector and SME contexts, with detection priorities matched to documented local threats.</li>
+</ul>
+<h3 id="authorized-targets-only">3.3 Authorized Targets Only</h3>
+<p>The tool must never scan an external IP or domain without written authorization recorded in <code>config/targets.yaml</code>. Scanning localhost and isolated test VMs is always permitted. This is a hard limit, not a guideline. The governance failure Probe addresses is the absence of accountability; replicating that failure by scanning unauthorized targets would be a direct contradiction.</p>
+<h2 id="implementation-plan">4. Implementation Plan</h2>
+<h3 id="phase-0-manual-assessment-current-phase">4.1 Phase 0: Manual Assessment (Current Phase)</h3>
+<p><strong>Objective:</strong> Manually assess one real target using existing open-source tools, document findings, and use that document as the requirements specification for the scanner.</p>
+<p><strong>Steps:</strong> 1. Identify one accessible target: a DeKUT department outside CeDReCS, a local SACCO, or a nearby county office. Obtain verbal or written permission. 2. Use Nmap from the command line to check for exposed ports. Use manual checks against the ODPC registration database for compliance status. 3. Document findings in <code>docs/manual-assessment/README.md</code>. 4. Do not write scanner automation until this document exists.</p>
+<p><strong>Why this order:</strong> The manual assessment defines what the scanner needs to catch. Writing code first produces a tool that detects what was easy to code, not what is actually exposed in Kenyan public sector environments.</p>
+<h3 id="phase-1-scanner-core">4.2 Phase 1: Scanner Core</h3>
+<p><strong>Objective:</strong> Automate the exposure check for authorized targets.</p>
+<p><strong>Components:</strong> - <code>src/scanner/port_scan.py</code>: Wrap Nmap via <code>python-nmap</code>, with a mandatory <code>timeout</code> parameter (default 10 seconds). - <code>src/scanner/version_check.py</code>: Compare detected service versions against a curated list of CVEs relevant to Kenya (starting with CVE-2017-0199). - Output to <code>output/scans/</code> as XML or JSON.</p>
+<h3 id="phase-2-compliance-module">4.3 Phase 2: Compliance Module</h3>
+<p><strong>Objective:</strong> Check ODPC registration and DPO designation status.</p>
+<p><strong>Components:</strong> - <code>src/compliance/odpc_checklist.py</code>: Manual or semi-automated lookup against the ODPC public register. - Output: Red/amber/green status for each requirement. - Reference: ODPC guidance on DPO designation and shared DPO arrangements for public bodies .</p>
+<h3 id="phase-3-report-generator">4.4 Phase 3: Report Generator</h3>
+<p><strong>Objective:</strong> Produce a one-page report in plain language.</p>
+<p><strong>Components:</strong> - <code>src/report/one_page_report.py</code>: Takes scan output and compliance status, produces a Markdown or plain-text report. - Language: Non-technical. “You have 3 exposed services. You are missing 2 compliance items. Fix these first.”</p>
+<h3 id="phase-4-validation">4.5 Phase 4: Validation</h3>
+<p><strong>Objective:</strong> Test against the Phase 0 target and measure.</p>
+<p><strong>Metrics:</strong> - Number of exposed services detected. - Compliance gaps identified. - Report readability (can a non-technical reader state the top three actions after reading?). - False-positive rate (were any findings incorrect?).</p>
+<h2 id="reference-links-for-phase-0-preparation">5. Reference Links for Phase 0 Preparation</h2>
+<p>The following links should be visited during free time before starting Phase 0. They provide the primary evidence base for the project’s justification.</p>
+<h3 id="government-website-incidents">Government Website Incidents</h3>
+<ol type="1">
+<li><p><strong>KBC, November 2025:</strong> “State assessing damage extent of Monday’s cyberattack” — https://www.kbc.co.ke/state-assessing-damage-extent-of-mondays-cyberattack/</p></li>
+<li><p><strong>Anadolu Agency, July 2026:</strong> “Hackers breach Kenyan president’s official website, demand Bitcoin ransom” — https://www.anadoluagency.com/en/africa/hackers-breach-kenyan-presidents-official-website-demand-bitcoin-ransom/4002285</p></li>
+<li><p><strong>The Standard, July 2026:</strong> “Kabogo: No sensitive data accessed after President’s website hack” — https://www.standardmedia.co.ke/amp/national/article/2001553147/kabogo-no-sensitive-data-accessed-after-presidents-website-hack</p></li>
+</ol>
+<h3 id="ecitizen-audit-and-breach">eCitizen Audit and Breach</h3>
+<ol start="4" type="1">
+<li><strong>Amnesty Kenya, August 2026:</strong> “Kenya’s Cybersecurity Gaps and Cost of Data Protection Failure” — https://www.amnestykenya.org/data-breaches-expose-more-than-systems-they-expose-accountability-failures/</li>
+</ol>
+<h3 id="energy-department-non-compliance">Energy Department Non-Compliance</h3>
+<ol start="5" type="1">
+<li><p><strong>Radio Generation, July 2026:</strong> “MPs question Energy State Department over failure to meet data protection rules” — https://radiogeneration.co.ke/mps-question-energy-state-department-over-failure-to-meet-data-protection-rules_43225</p></li>
+<li><p><strong>Daily Nation, July 2026:</strong> “Revealed: Possible sensitive data breaches at Energy Ministry” — https://nation.africa/kenya/news/revealed-possible-sensitive-data-breaches-at-energy-ministry–5541252</p></li>
+</ol>
+<h3 id="national-threat-data">National Threat Data</h3>
+<ol start="7" type="1">
+<li><p><strong>The Kenyan Wallstreet, October 2026:</strong> “Safaricom Faces 1.25bn Cyber Intrusion Attempts as Kenya Threats Rise” — https://kenyanwallstreet.com/safaricom-faces-1-25-billion-cyber-intrusion-attempts-as-kenya-threats-rise</p></li>
+<li><p><strong>Pulse Kenya, October 2026:</strong> “Kenya records 11.12 billion cyber threats as mobile money and internet use surge” — https://www.pulse.co.ke/story/kenyas-cyber-threats-rise-29percent-as-mobile-money-grows-to-54-million-2026101211332948035</p></li>
+</ol>
+<h3 id="legal-and-regulatory-framework">Legal and Regulatory Framework</h3>
+<ol start="9" type="1">
+<li><p><strong>ODPC DPO Guidance Note (PDF):</strong> https://www.odpc.go.ke/wp-content/uploads/2026/07/ODPC-%E2%80%93-Guidance-Note-for-Data-Protection-Officers-DPOs.pdf</p></li>
+<li><p><strong>Data Privacy Advocates, July 2026:</strong> “Draft Guidelines on the Designation, Tasks, Position &amp; Professional Development of Data Protection Officers” — https://dataprivacyadvocates.co.ke/resource-guidelines-dpo-framework</p></li>
+<li><p><strong>Data Privacy Advocates, July 2026:</strong> “Kenya’s DPO Framework Gap” — https://dataprivacyadvocates.co.ke/insight-kenya-dpo-framework-reform</p></li>
+</ol>
+<h2 id="what-to-do-immediately">6. What to Do Immediately</h2>
+<p>Open <code>docs/manual-assessment/README.md</code> and begin the Phase 0 work. The folder structure is already in place. The reference links above provide the evidence for why this work matters. The next hour should be spent identifying one accessible target and documenting what you find manually—not writing Python.</p>
+<p>The manual assessment is not a preliminary step to the “real” project. It is the requirements specification. The code will be better because it exists.</p>
+<h2 id="a-note-on-scope-discipline">7. A Note on Scope Discipline</h2>
+<p>The research findings are stark, and the temptation to expand scope is real. The presidency website was defaced twice; the natural response is “we need better defenses everywhere.” But Probe’s value comes from its narrowness. It does one thing: it makes basic exposure and compliance gaps visible to the person who signs the report. If it also tried to be a threat detector, a SIEM, or a Zero Trust framework, it would become another unfinished prototype.</p>
+<p>It is a failure of basic visibility and accountability. Probe addresses that failure, and nothing else.</p>
+</body>
+</html>

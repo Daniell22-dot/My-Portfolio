@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10.1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>InventoryPOS - Deployment Guide</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../research.css" />
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">InventoryPOS - Deployment Guide</h1>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#inventorypos-deployment-guide" id="toc-inventorypos-deployment-guide">InventoryPOS — Deployment Guide</a>
+<ul>
+<li><a href="#supported-targets" id="toc-supported-targets">Supported targets</a></li>
+<li><a href="#prerequisites" id="toc-prerequisites">Prerequisites</a>
+<ul>
+<li><a href="#environment-variables-windows" id="toc-environment-variables-windows">Environment variables (Windows)</a></li>
+</ul></li>
+<li><a href="#verify-before-packaging" id="toc-verify-before-packaging">Verify before packaging</a></li>
+<li><a href="#build-run" id="toc-build-run">Build &amp; run</a></li>
+<li><a href="#publish" id="toc-publish">Publish</a>
+<ul>
+<li><a href="#windows-desktop" id="toc-windows-desktop">Windows desktop</a></li>
+<li><a href="#android" id="toc-android">Android</a></li>
+<li><a href="#ios-mac-catalyst-on-macos" id="toc-ios-mac-catalyst-on-macos">iOS / Mac Catalyst (on macOS)</a></li>
+</ul></li>
+<li><a href="#app-identity-and-versioning" id="toc-app-identity-and-versioning">App identity and versioning</a></li>
+<li><a href="#runtime-configuration" id="toc-runtime-configuration">Runtime configuration</a>
+<ul>
+<li><a href="#preferences-non-secret" id="toc-preferences-non-secret">Preferences (non-secret)</a></li>
+<li><a href="#secure-storage-secrets-keys" id="toc-secure-storage-secrets-keys">Secure storage (secrets / keys)</a></li>
+</ul></li>
+<li><a href="#database-provisioning" id="toc-database-provisioning">Database provisioning</a>
+<ul>
+<li><a href="#encryption-at-rest-sqlcipher" id="toc-encryption-at-rest-sqlcipher">Encryption at rest (SQLCipher)</a></li>
+</ul></li>
+<li><a href="#first-run-demo-data" id="toc-first-run-demo-data">First-run / demo data</a></li>
+<li><a href="#documentation-export" id="toc-documentation-export">Documentation export</a></li>
+<li><a href="#release-checklist" id="toc-release-checklist">Release checklist</a></li>
+<li><a href="#troubleshooting" id="toc-troubleshooting">Troubleshooting</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="inventorypos-deployment-guide">InventoryPOS — Deployment Guide</h1>
+<blockquote>
+<p>Companion reference to <a href="inventorypos-project-documentation.html">InventoryPOS Project Documentation</a> (Chapter 5). Covers build, publish, signing, configuration, database provisioning and packaging for every supported target.</p>
+</blockquote>
+<h2 id="supported-targets">Supported targets</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Platform</th>
+<th>TFM</th>
+<th>Typical distribution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Windows desktop</td>
+<td><code>net8.0-windows10.0.19041.0</code></td>
+<td>MSIX (packaged) or unpackaged <code>.exe</code></td>
+</tr>
+<tr>
+<td>Android</td>
+<td><code>net8.0-android</code></td>
+<td>APK (sideload) or AAB (Play Store)</td>
+</tr>
+<tr>
+<td>iOS</td>
+<td><code>net8.0-ios</code></td>
+<td><code>.ipa</code> via App Store / TestFlight</td>
+</tr>
+<tr>
+<td>Mac Catalyst</td>
+<td><code>net8.0-maccatalyst</code></td>
+<td><code>.pkg</code> / Mac App Store</td>
+</tr>
+</tbody>
+</table>
+<p>iOS and Mac Catalyst builds require macOS with Xcode. Windows and Android can be built on Windows.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li><p><a href="https://dotnet.microsoft.com/download">.NET 8 SDK</a> with the MAUI workload:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>dotnet workload install maui</span></code></pre></div></li>
+<li><p><strong>Android</strong>: JDK 17 and the Android SDK (platform 34, build-tools 34.0.0).</p></li>
+<li><p><strong>Windows</strong>: Windows 10 1809+ (10.0.17763.0) for the desktop target.</p></li>
+<li><p><strong>Docs export (optional)</strong>: <code>pandoc</code> and <code>mmdc</code> on PATH plus Google Chrome.</p></li>
+</ul>
+<h3 id="environment-variables-windows">Environment variables (Windows)</h3>
+<p>Set once as user variables:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>setx JAVA_HOME <span class="st">&quot;C:\Program Files\Java\jdk-17&quot;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>setx ANDROID_HOME <span class="st">&quot;</span><span class="va">$env</span><span class="op">:</span><span class="va">LOCALAPPDATA</span><span class="st">\Android\Sdk&quot;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>setx ANDROID_SDK_ROOT <span class="st">&quot;</span><span class="va">$env</span><span class="op">:</span><span class="va">LOCALAPPDATA</span><span class="st">\Android\Sdk&quot;</span></span></code></pre></div>
+<blockquote>
+<p>PowerShell 5.1 note: run <code>setx</code> from <code>cmd</code> semantics or restart the shell — the current session will not see the new values until restarted.</p>
+</blockquote>
+<h2 id="verify-before-packaging">Verify before packaging</h2>
+<p>Run the full test suite (must be green) and a debug build:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dotnet test src\InventoryPOS<span class="op">.</span><span class="fu">UnitTests</span>\InventoryPOS<span class="op">.</span><span class="fu">UnitTests</span><span class="op">.</span><span class="fu">csproj</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>dotnet build src\InventoryPOS<span class="op">.</span><span class="fu">Maui</span>\InventoryPOS<span class="op">.</span><span class="fu">Maui</span><span class="op">.</span><span class="fu">csproj</span> <span class="op">-</span>f net8<span class="op">.</span><span class="dv">0</span><span class="op">-</span>windows10<span class="op">.</span><span class="dv">0.19041</span><span class="op">.</span><span class="dv">0</span></span></code></pre></div>
+<h2 id="build-run">Build &amp; run</h2>
+<div class="sourceCode" id="cb4"><pre class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Windows desktop</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>dotnet build src\InventoryPOS<span class="op">.</span><span class="fu">Maui</span>\InventoryPOS<span class="op">.</span><span class="fu">Maui</span><span class="op">.</span><span class="fu">csproj</span> <span class="op">-</span>f net8<span class="op">.</span><span class="dv">0</span><span class="op">-</span>windows10<span class="op">.</span><span class="dv">0.19041</span><span class="op">.</span><span class="dv">0</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="dt">dotnet</span> run <span class="op">--</span>project src\InventoryPOS<span class="op">.</span><span class="fu">Maui</span> <span class="op">-</span>f net8<span class="op">.</span><span class="dv">0</span><span class="op">-</span>windows10<span class="op">.</span><span class="dv">0.19041</span><span class="op">.</span><span class="dv">0</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Android</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>dotnet build src\InventoryPOS<span class="op">.</span><span class="fu">Maui</span>\InventoryPOS<span class="op">.</span><span class="fu">Maui</span><span class="op">.</span><span class="fu">csproj</span> <span class="op">-</span>f net8<span class="op">.</span><span class="dv">0</span><span class="op">-</span>android</span></code></pre></div>
+<blockquote>
+<p>The first Android build is slow (native tooling for all ABIs). Later builds reuse cached artifacts.</p>
+</blockquote>
+<h2 id="publish">Publish</h2>
+<h3 id="windows-desktop">Windows desktop</h3>
+<p>Packaged MSIX (needs a signing certificate, see below):</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>dotnet publish src\InventoryPOS<span class="op">.</span><span class="fu">Maui</span>\InventoryPOS<span class="op">.</span><span class="fu">Maui</span><span class="op">.</span><span class="fu">csproj</span> `</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">-</span>f net8<span class="op">.</span><span class="dv">0</span><span class="op">-</span>windows10<span class="op">.</span><span class="dv">0.19041</span><span class="op">.</span><span class="dv">0</span> <span class="op">-</span>c Release `</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">-</span>p<span class="op">:</span>RuntimeIdentifierOverride<span class="op">=</span>win10-x64 `</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">-</span>p<span class="op">:</span>WindowsPackageType<span class="op">=</span>MSIX</span></code></pre></div>
+<p>Unpackaged self-contained (simplest for internal distribution):</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dotnet publish src\InventoryPOS<span class="op">.</span><span class="fu">Maui</span>\InventoryPOS<span class="op">.</span><span class="fu">Maui</span><span class="op">.</span><span class="fu">csproj</span> `</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">-</span>f net8<span class="op">.</span><span class="dv">0</span><span class="op">-</span>windows10<span class="op">.</span><span class="dv">0.19041</span><span class="op">.</span><span class="dv">0</span> <span class="op">-</span>c Release `</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">-</span>p<span class="op">:</span>WindowsPackageType<span class="op">=</span>None `</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">-</span>p<span class="op">:</span>RuntimeIdentifier<span class="op">=</span>win10-x64 <span class="op">--</span>self-contained true</span></code></pre></div>
+<h3 id="android">Android</h3>
+<div class="sourceCode" id="cb7"><pre class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Signed APK for sideloading</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>dotnet publish src\InventoryPOS<span class="op">.</span><span class="fu">Maui</span>\InventoryPOS<span class="op">.</span><span class="fu">Maui</span><span class="op">.</span><span class="fu">csproj</span> `</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">-</span>f net8<span class="op">.</span><span class="dv">0</span><span class="op">-</span>android <span class="op">-</span>c Release `</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">-</span>p<span class="op">:</span>AndroidPackageFormat<span class="op">=</span>apk `</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">-</span>p<span class="op">:</span>AndroidKeyStore<span class="op">=</span>true `</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">-</span>p<span class="op">:</span>AndroidSigningKeyStore<span class="op">=</span>inventorypos<span class="op">.</span><span class="fu">keystore</span> `</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="op">-</span>p<span class="op">:</span>AndroidSigningKeyAlias<span class="op">=</span>inventorypos `</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="op">-</span>p<span class="op">:</span>AndroidSigningKeyPass<span class="op">=&lt;</span>password<span class="op">&gt;</span> `</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="op">-</span>p<span class="op">:</span>AndroidSigningStorePass<span class="op">=&lt;</span>password<span class="op">&gt;</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co"># App Bundle for Google Play</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>dotnet publish src\InventoryPOS<span class="op">.</span><span class="fu">Maui</span>\InventoryPOS<span class="op">.</span><span class="fu">Maui</span><span class="op">.</span><span class="fu">csproj</span> `</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="op">-</span>f net8<span class="op">.</span><span class="dv">0</span><span class="op">-</span>android <span class="op">-</span>c Release <span class="op">-</span>p<span class="op">:</span>AndroidPackageFormat<span class="op">=</span>aab</span></code></pre></div>
+<p>Create the keystore once (keep it and its passwords safe — losing them means you cannot update the published app):</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>keytool <span class="op">-</span>genkeypair <span class="op">-</span>v <span class="op">-</span>keystore inventorypos<span class="op">.</span><span class="fu">keystore</span> `</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">-</span>alias inventorypos <span class="op">-</span>keyalg RSA <span class="op">-</span>keysize <span class="dv">2048</span> <span class="op">-</span>validity <span class="dv">10000</span></span></code></pre></div>
+<h3 id="ios-mac-catalyst-on-macos">iOS / Mac Catalyst (on macOS)</h3>
+<div class="sourceCode" id="cb9"><pre class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>dotnet publish src\InventoryPOS<span class="op">.</span><span class="fu">Maui</span>\InventoryPOS<span class="op">.</span><span class="fu">Maui</span><span class="op">.</span><span class="fu">csproj</span> <span class="op">-</span>f net8<span class="op">.</span><span class="dv">0</span><span class="op">-</span>ios <span class="op">-</span>c Release `</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">-</span>p<span class="op">:</span>CodesignKey<span class="op">=</span><span class="st">&quot;Apple Distribution: Your Co (TEAMID)&quot;</span> `</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">-</span>p<span class="op">:</span>CodesignProvision<span class="op">=</span><span class="st">&quot;InventoryPOS App Store&quot;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>dotnet publish src\InventoryPOS<span class="op">.</span><span class="fu">Maui</span>\InventoryPOS<span class="op">.</span><span class="fu">Maui</span><span class="op">.</span><span class="fu">csproj</span> <span class="op">-</span>f net8<span class="op">.</span><span class="dv">0</span><span class="op">-</span>maccatalyst <span class="op">-</span>c Release</span></code></pre></div>
+<h2 id="app-identity-and-versioning">App identity and versioning</h2>
+<p>Set in <code>src\InventoryPOS.Maui\InventoryPOS.Maui.csproj</code>:</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Property</th>
+<th>Current value</th>
+<th>Change for release</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ApplicationTitle</code></td>
+<td><code>InventoryPOS</code></td>
+<td>Display name</td>
+</tr>
+<tr>
+<td><code>ApplicationId</code></td>
+<td><code>com.companyname.inventorypos.maui</code></td>
+<td>Your reverse-DNS id</td>
+</tr>
+<tr>
+<td><code>ApplicationDisplayVersion</code></td>
+<td><code>1.0</code></td>
+<td>Marketing version</td>
+</tr>
+<tr>
+<td><code>ApplicationVersion</code></td>
+<td><code>1</code></td>
+<td>Increment every store upload</td>
+</tr>
+</tbody>
+</table>
+<h2 id="runtime-configuration">Runtime configuration</h2>
+<p>Integration features are <strong>off by default</strong> and are enabled per install/tenant. Client-safe values may ship in the app; <strong>secrets and webhook challenges must only ever live on a trusted backend.</strong></p>
+<h3 id="preferences-non-secret">Preferences (non-secret)</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Key</th>
+<th>Meaning</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>IntaSendPublishableKey</code></td>
+<td>IntaSend publishable key</td>
+<td>empty</td>
+</tr>
+<tr>
+<td><code>IntaSendSandbox</code></td>
+<td>Use IntaSend sandbox</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>EtimsBaseUrl</code></td>
+<td>KRA eTIMS base URL</td>
+<td>sandbox URL</td>
+</tr>
+<tr>
+<td><code>EtimsTin</code></td>
+<td>KRA taxpayer PIN</td>
+<td>empty</td>
+</tr>
+<tr>
+<td><code>EtimsBranchId</code></td>
+<td>KRA branch id</td>
+<td><code>00</code></td>
+</tr>
+<tr>
+<td><code>EtimsDeviceSerial</code></td>
+<td>VSCU device serial</td>
+<td>empty</td>
+</tr>
+<tr>
+<td><code>EtimsClientId</code></td>
+<td>eTIMS client id</td>
+<td>empty</td>
+</tr>
+<tr>
+<td><code>Fiscal_{CC}_Endpoint</code></td>
+<td>Generic fiscal endpoint (CC = <code>TZ</code>/<code>UG</code>/…)</td>
+<td>empty</td>
+</tr>
+<tr>
+<td><code>Fiscal_{CC}_Name</code></td>
+<td>Display name</td>
+<td><code>Fiscal (CC)</code></td>
+</tr>
+<tr>
+<td><code>Fiscal_{CC}_ApiKey</code></td>
+<td>Bearer token</td>
+<td>empty</td>
+</tr>
+<tr>
+<td><code>MoneyCurrencyCode</code></td>
+<td>ISO-4217 display currency</td>
+<td><code>KES</code></td>
+</tr>
+<tr>
+<td><code>MoneyTaxMode</code></td>
+<td><code>0</code> exclusive, <code>1</code> inclusive</td>
+<td>exclusive</td>
+</tr>
+<tr>
+<td><code>MoneyCashRoundingStep</code></td>
+<td>Cash rounding step (minor units)</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>SyncBaseUrl</code> / <code>SyncApiKey</code></td>
+<td>Offline-sync backend</td>
+<td>empty</td>
+</tr>
+</tbody>
+</table>
+<p>Settings UI writes these via <code>MpesaOptionsProvider</code>, <code>EtimsOptionsProvider</code>, <code>MoneyOptionsProvider</code> and <code>SyncOptionsProvider</code>. <code>MpesaOptionsProvider</code> also exposes static defaults (<code>DefaultPublishableKey</code>, <code>DefaultSandbox</code>) that can be baked into a build.</p>
+<h3 id="secure-storage-secrets-keys">Secure storage (secrets / keys)</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Key</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DatabasePassphrase</code></td>
+<td>SQLCipher database passphrase</td>
+</tr>
+<tr>
+<td>device master key</td>
+<td>AES master key for field encryption (<code>CipherService</code>)</td>
+</tr>
+<tr>
+<td>branch master key</td>
+<td>Per-device key for branch signing (<code>SecureBranchKeyProvider</code>)</td>
+</tr>
+<tr>
+<td><code>UserId</code> / <code>BusinessId</code> / <code>IsLoggedIn</code> / <code>SessionTimestamp</code></td>
+<td>Session state (<code>AuthService</code>)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="database-provisioning">Database provisioning</h2>
+<ul>
+<li>Local SQLite database at <code>FileSystem.AppDataDirectory/InventoryPOS.db</code>.</li>
+<li>EF Core migrations are applied automatically on first launch by <code>DataService.InitializeAsync</code>, including an upgrade path for databases created by earlier <code>EnsureCreated</code>-based builds.</li>
+<li>Migration history: see <a href="inventorypos-database-schema.html#migration-history">InventoryPOS Database Schema</a>.</li>
+<li><strong>Reset</strong>: delete <code>InventoryPOS.db</code> in the app data folder and restart.</li>
+<li><strong>Rebuild DDL</strong>: <code>dotnet ef dbcontext script -p src\InventoryPOS.Data\InventoryPOS.Data.csproj -s src\InventoryPOS.Data\InventoryPOS.Data.csproj -o database\Migrations\Schema.sql</code></li>
+</ul>
+<h3 id="encryption-at-rest-sqlcipher">Encryption at rest (SQLCipher)</h3>
+<p>Optional and <strong>off by default</strong>. Toggle in <strong>Settings → Security</strong>:</p>
+<ul>
+<li>Enabling generates a random 32-byte passphrase, migrates the existing database in place (<code>ATTACH … KEY</code> + <code>sqlcipher_export</code>), and stores the passphrase in <code>SecureStorage</code> under <code>DatabasePassphrase</code>.</li>
+<li><strong>A restart is required</strong> so connections pick up the key.</li>
+<li>Disabling removes the passphrase (the file is re-created unencrypted on next plaintext open path). Keep backups before toggling.</li>
+</ul>
+<h2 id="first-run-demo-data">First-run / demo data</h2>
+<p>The seeder provisions demo tenants and accounts (all flagged <code>RequiresPasswordChange</code>):</p>
+<table>
+<thead>
+<tr>
+<th>Username</th>
+<th>Password</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>admin</td>
+<td>Temp@Admin1</td>
+<td>Admin</td>
+</tr>
+<tr>
+<td>manager</td>
+<td>Temp@Manager1</td>
+<td>Manager</td>
+</tr>
+<tr>
+<td>seller</td>
+<td>Temp@Seller1</td>
+<td>Seller</td>
+</tr>
+</tbody>
+</table>
+<p>For a production tenant, use the in-app owner self sign-up (14-day free trial) rather than the demo accounts.</p>
+<h2 id="documentation-export">Documentation export</h2>
+<p>The Word build of the main design document:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>powershell <span class="op">-</span>ExecutionPolicy Bypass <span class="op">-</span>File scripts\export-docs<span class="op">.</span><span class="fu">ps1</span></span></code></pre></div>
+<p>This renders each <code>```mermaid</code> block to <code>docs\diagrams\dNN.png</code> with <code>mermaid-cli</code> then converts the Markdown to <code>.docx</code> with Pandoc. The script accepts <code>-Source &lt;path&gt;</code> to export a different Markdown file.</p>
+<p><code>mmdc</code> needs <code>scripts\puppeteer-config.json</code> (Chrome path + <code>--no-sandbox</code>).</p>
+<h2 id="release-checklist">Release checklist</h2>
+<ol type="1">
+<li><code>dotnet test</code> is green and all warnings reviewed.</li>
+<li>Bump <code>ApplicationDisplayVersion</code> and <code>ApplicationVersion</code>.</li>
+<li>Confirm <code>ApplicationId</code> matches the store listing.</li>
+<li>Produce signed artifacts for each target store.</li>
+<li>Verify a clean first run: migrations apply, demo/owner sign-up works, a sale completes offline.</li>
+<li>Confirm integrations behave correctly when <strong>unconfigured</strong> (fiscal/sync must never block a sale).</li>
+<li>If shipping DB encryption, validate the enable→restart→open flow on a copy.</li>
+</ol>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely cause / fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error NETSDK1147: workload ... maui</code></td>
+<td>Run <code>dotnet workload install maui</code></td>
+</tr>
+<tr>
+<td>Android build fails on JDK</td>
+<td><code>JAVA_HOME</code> must point at JDK 17 and the shell restarted</td>
+</tr>
+<tr>
+<td>Database locked / stale schema</td>
+<td>Delete <code>InventoryPOS.db</code> and restart, or ensure only one app instance</td>
+</tr>
+<tr>
+<td>SQLCipher-enabled DB won’t open</td>
+<td>Passphrase missing from <code>SecureStorage</code>; restore from backup or resume plaintext</td>
+</tr>
+<tr>
+<td>Fiscal/sync features appear dead</td>
+<td>They are opt-in — set the relevant preferences/SecureStorage values</td>
+</tr>
+<tr>
+<td><code>mmdc</code> fails during docs export</td>
+<td>Set the Chrome path in <code>scripts\puppeteer-config.json</code></td>
+</tr>
+<tr>
+<td><code>LF will be replaced by CRLF</code> warnings</td>
+<td>Benign Git line-ending notice on Windows</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
